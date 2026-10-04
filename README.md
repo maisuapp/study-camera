@@ -1,14 +1,39 @@
-# 🎨 Study Camera (スタディカメラ)
+# 🎨 スタディカメラ | Study Camera (Sarah Edition)
 
-Aplicativo web de inteligência visual e suporte aos estudos para estudantes do Chūgakkou (中学校). 
-Desenvolvido com estética Pixel Art, Anime e tema Lo-Fi Jazz para suporte escolar e resolução de questões de livros/testes.
+中学生（14歳・中学校1年生）のサラ専用にカスタマイズされた、スマホファーストのAI学習サポートWebアプリケーションです。  
+ローファイ・ジャズ（Lo-Fi Jazz）とピクセルアート、インディペンデント・アニメの落ち着いたダークトーンを基調に設計されています。
 
-## 🚀 Recursos
-- 📸 **Captura por Câmera:** Leitura de imagens de testes e livros.
-- 📜 **Modo Detalhado (Densetsu):** Explicações passo a passo adaptadas para 14 anos.
-- ⚔️ **Modo Quest / Teste:** Simulados e quizzes baseados nas fotos tiradas.
+---
 
-## 🛠️ Tecnologias
-- HTML5 / Tailwind CSS
-- Lucide Icons & Google Fonts (Press Start 2P, Noto Sans JP, VT323)
-- Gemini API (Visão Computacional)
+## 🌟 主な機能 (Features)
+
+1. **👤 プロフィール編集機能 (Profile Customization)**
+   - ユーザーネーム、アイコン（可愛いプリセット絵文字・カスタム絵文字入力）、バッジ・肩書、学年や目標ステータスを自由にカスタマイズ・保存可能。
+   - お使いの端末の `localStorage` に安全に保持されます。
+
+2. **🌐 多言語 & 言語追加機能 (Multi-Language & Custom Language Addition)**
+   - 標準で **日本語 (🇯🇵)**、**Português (🇧🇷)**、**English (🇺🇸)** に対応。
+   - さらに「➕ 言語を追加」機能により、Español (🇪🇸)、한국어 (🇰🇷)、Français (🇫🇷)、Deutsch (🇩🇪)、Italiano (🇮🇹)、中文 (🇨🇳) などのプリセットや、任意のカスタム言語を追加可能。
+   - 追加した言語に合わせて、UI、AIの解説生成、音声読み上げ（Text-to-Speech）が自動的に対応。
+
+3. **📸 中学1年生向けマルチモーダル問題解析**
+   - 教科書、定期テスト、宿題プリントの手書き文字や数式を撮影・アップロードしてAIで即座に解析。
+
+4. **📜 2つの解説モード**
+   - **⚡ スピード解答**: 3ステップで要点と答えを素早く確認。
+   - **📜 でんせつ解説**: 途中式、考え方のロジック、テスト頻出キーワード、サラ向けのアート感覚の覚え方を丁寧に図解。
+
+5. **⚔️ インタラクティブ復習クエスト（3問ミニテスト）**
+   - 学習した内容からすぐに3問の選択式クエストに挑戦。EXP獲得とレベルアップ演出。
+
+6. **🎵 ローファイ・ジャズBGMシンセサイザー（完全オフライン）**
+   - Web Audio APIによる内蔵シンセサイザーで、暖かみのあるジャズコード（Dm9 → G13 → Cmaj9 → Am9）をリラックスBGMとして再生。
+
+7. **📱 スマートフォン最適化（Thumb Zone設計）**
+   - 画面下部に主要アクションを配置し、片手操作に最適化。
+
+---
+
+## 🚀 公開URL (Live Link)
+
+👉 **https://maisuapp.github.io/study-camera/**

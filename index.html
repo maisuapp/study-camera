@@ -271,16 +271,16 @@
                     <i data-lucide="chevron-down" class="w-3 h-3 text-gray-400"></i>
                 </button>
                 <!-- Dropdown Menu -->
-                <div id="langDropdown" class="hidden absolute right-0 top-10 z-50 pixel-box bg-[#251f33] p-1.5 rounded-md min-w-[135px] flex flex-col gap-1 border-purple-500 shadow-2xl">
-                    <button onclick="changeLanguage('ja')" class="pixel-btn text-left px-2 py-1.5 rounded text-[11px] font-jp flex items-center gap-2 hover:bg-purple-900 text-white">
-                        <span>🇯🇵</span> <span class="font-bold">日本語</span>
-                    </button>
-                    <button onclick="changeLanguage('pt')" class="pixel-btn text-left px-2 py-1.5 rounded text-[11px] font-jp flex items-center gap-2 hover:bg-purple-900 text-white">
-                        <span>🇧🇷</span> <span class="font-bold">Português</span>
-                    </button>
-                    <button onclick="changeLanguage('en')" class="pixel-btn text-left px-2 py-1.5 rounded text-[11px] font-jp flex items-center gap-2 hover:bg-purple-900 text-white">
-                        <span>🇺🇸</span> <span class="font-bold">English</span>
-                    </button>
+                <div id="langDropdown" class="hidden absolute right-0 top-10 z-50 pixel-box bg-[#251f33] p-1.5 rounded-md min-w-[150px] flex flex-col gap-1 border-purple-500 shadow-2xl">
+                    <div id="langListContainer" class="flex flex-col gap-1 max-h-56 overflow-y-auto pr-1">
+                        <!-- Populated dynamically via renderLangMenu() -->
+                    </div>
+                    <div class="pt-1 border-t border-purple-900/40">
+                        <button onclick="openAddLangModal()" class="w-full pixel-btn text-left px-2 py-1.5 rounded text-[11px] font-jp flex items-center gap-1.5 bg-pink-900/80 hover:bg-pink-800 text-yellow-200">
+                            <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-pink-300"></i>
+                            <span id="btnAddLangDropdownText" class="font-bold">言語を追加...</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -315,18 +315,22 @@
     <!-- Main Container (Mobile Ergonomic Center) -->
     <main class="w-full max-w-lg px-4 pt-4 flex-1 flex flex-col gap-4">
 
-        <!-- Sarah's Profile & Gamification Stats Banner -->
+        <!-- Sarah's Profile & Gamification Stats Banner (Editable!) -->
         <section class="pixel-box p-3 rounded-lg flex items-center justify-between gap-3 bg-[#231d30]">
             <div class="flex items-center gap-3">
-                <div class="relative">
-                    <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-black flex items-center justify-center text-xl shadow-[2px_2px_0_#000]">
+                <!-- Interactive Avatar with Edit Click -->
+                <div class="relative cursor-pointer group" onclick="openProfileModal()" title="アイコン・プロフィールを変更">
+                    <div id="profileAvatarDisplay" class="w-11 h-11 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-black flex items-center justify-center text-xl shadow-[2px_2px_0_#000] group-hover:scale-105 transition-transform">
                         🎨
                     </div>
                     <span class="absolute -bottom-1 -right-1 bg-yellow-400 text-black font-pixel text-[8px] px-1 border border-black rounded">LV14</span>
                 </div>
                 <div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5">
                         <span id="profileName" class="font-bold text-sm text-purple-200">サラ (Sarah)</span>
+                        <button onclick="openProfileModal()" class="text-gray-400 hover:text-yellow-300 p-0.5 rounded transition-colors" title="プロフィール編集">
+                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                        </button>
                         <span id="profileBadge" class="text-[10px] text-pink-300 font-retro px-1.5 py-0.2 bg-pink-950/60 border border-pink-500/30 rounded">中1 ART & JAZZ</span>
                     </div>
                     <div class="flex items-center gap-2 mt-1">
@@ -338,8 +342,8 @@
                 </div>
             </div>
 
-            <!-- Focus Status & Middle School Badge -->
-            <div class="flex flex-col items-end">
+            <!-- Focus Status & Middle School Badge (Clickable to edit) -->
+            <div class="flex flex-col items-end cursor-pointer" onclick="openProfileModal()" title="プロフィール編集">
                 <span id="profileStatusText" class="font-pixel text-[9px] text-emerald-400 flex items-center gap-1">
                     <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> 集中モード
                 </span>
@@ -480,12 +484,10 @@
             </div>
 
             <!-- Translate Resolution Language Options Bar (Expandable) -->
-            <div id="resolutionTranslateBar" class="hidden p-2 rounded bg-black/40 border border-purple-500/30 flex items-center justify-between text-xs font-jp">
+            <div id="resolutionTranslateBar" class="hidden p-2 rounded bg-black/40 border border-purple-500/30 flex flex-wrap items-center justify-between gap-1.5 text-xs font-jp">
                 <span class="text-gray-300 text-[11px] font-bold">解説を翻訳:</span>
-                <div class="flex gap-1.5">
-                    <button onclick="translateCurrentResolution('ja')" class="pixel-btn px-2 py-1 bg-purple-900 text-white rounded text-[10px]">🇯🇵 日本語</button>
-                    <button onclick="translateCurrentResolution('pt')" class="pixel-btn px-2 py-1 bg-indigo-900 text-white rounded text-[10px]">🇧🇷 Português</button>
-                    <button onclick="translateCurrentResolution('en')" class="pixel-btn px-2 py-1 bg-slate-800 text-white rounded text-[10px]">🇺🇸 English</button>
+                <div id="resolutionLangOptions" class="flex flex-wrap gap-1.5">
+                    <!-- Populated dynamically via renderResolutionLangButtons() -->
                 </div>
             </div>
 
@@ -641,9 +643,142 @@
         </div>
     </nav>
 
-    <!-- Modal: API Key Configuration -->
-    <div id="apiKeyModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="pixel-box p-5 rounded-lg max-w-sm w-full flex flex-col gap-4 bg-[#251f33] border-purple-500">
+    <!-- Modal 1: Profile Customization (Sarah's Profile Edit Modal) -->
+    <div id="profileModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="pixel-box p-5 rounded-lg max-w-sm w-full flex flex-col gap-3.5 bg-[#251f33] border-purple-500 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-purple-900/40 pb-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-lg">👤</span>
+                    <h3 id="modalProfileTitle" class="font-pixel text-xs text-purple-300">プロフィール編集</h3>
+                </div>
+                <button onclick="closeProfileModal()" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Avatar Selection -->
+            <div class="flex flex-col gap-1.5">
+                <label id="modalAvatarLabel" class="text-[10px] font-pixel text-pink-300">アイコン選択:</label>
+                <!-- Avatar presets grid -->
+                <div id="avatarPresetsGrid" class="grid grid-cols-6 gap-1.5 p-2 rounded bg-black/40 border border-purple-900/40 text-lg">
+                    <!-- Injected by JavaScript -->
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-[11px] text-gray-400 font-jp">カスタム絵文字:</span>
+                    <input type="text" id="inputCustomAvatar" maxlength="2" placeholder="🎨"
+                        class="p-1 rounded bg-black/60 border border-purple-500/50 text-center text-lg w-12 focus:outline-none focus:border-yellow-300">
+                </div>
+            </div>
+
+            <!-- Username Field -->
+            <div class="flex flex-col gap-1">
+                <label id="modalUsernameLabel" class="text-[10px] font-pixel text-yellow-300">ユーザーネーム:</label>
+                <input type="text" id="inputProfileName" placeholder="サラ (Sarah)" maxlength="20"
+                    class="p-2 rounded bg-black/50 border-2 border-purple-500/50 text-white font-jp text-xs focus:outline-none focus:border-yellow-300">
+            </div>
+
+            <!-- Badge / Subtitle -->
+            <div class="flex flex-col gap-1">
+                <label id="modalBadgeLabel" class="text-[10px] font-pixel text-purple-300">バッジ・肩書:</label>
+                <input type="text" id="inputProfileBadge" placeholder="中1 ART & JAZZ" maxlength="25"
+                    class="p-2 rounded bg-black/50 border-2 border-purple-500/50 text-white font-jp text-xs focus:outline-none focus:border-yellow-300">
+            </div>
+
+            <!-- Grade / Status -->
+            <div class="flex flex-col gap-1">
+                <label id="modalGradeLabel" class="text-[10px] font-pixel text-emerald-300">学年・ステータス:</label>
+                <input type="text" id="inputProfileGrade" placeholder="中学校第1学年 • 14歳" maxlength="30"
+                    class="p-2 rounded bg-black/50 border-2 border-purple-500/50 text-white font-jp text-xs focus:outline-none focus:border-yellow-300">
+            </div>
+
+            <!-- Save & Cancel Buttons -->
+            <div class="flex gap-2 pt-2">
+                <button onclick="saveUserProfile()"
+                    class="flex-1 pixel-btn bg-emerald-600 hover:bg-emerald-500 text-white font-jp font-bold text-[11px] py-2 px-3 rounded">
+                    <span id="modalProfileSaveBtnText">保存する</span>
+                </button>
+                <button onclick="closeProfileModal()"
+                    class="pixel-btn bg-slate-800 hover:bg-slate-700 text-gray-300 font-jp font-bold text-[11px] py-2 px-3 rounded">
+                    キャンセル
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Add Language Modal (言語追加機能) -->
+    <div id="addLangModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="pixel-box p-5 rounded-lg max-w-sm w-full flex flex-col gap-3.5 bg-[#251f33] border-pink-500 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-pink-900/40 pb-2">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="globe" class="w-4 h-4 text-pink-400"></i>
+                    <h3 id="modalAddLangTitle" class="font-pixel text-xs text-pink-300">新しい言語を追加</h3>
+                </div>
+                <button onclick="closeAddLangModal()" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <p id="modalAddLangDesc" class="text-xs text-gray-300 font-jp leading-relaxed">
+                ワンタップで定番言語を追加するか、好きな言語名を入力して新しく追加できます。
+            </p>
+
+            <!-- Quick Language Presets -->
+            <div class="flex flex-col gap-1">
+                <span class="text-[10px] font-pixel text-yellow-300">よく使う言語プリセット:</span>
+                <div class="grid grid-cols-3 gap-1.5 text-xs font-jp">
+                    <button onclick="quickAddPresetLang('es', '🇪🇸', 'Español')" class="pixel-btn p-1.5 rounded bg-purple-900 text-white flex items-center gap-1 hover:bg-purple-800">
+                        <span>🇪🇸</span> <span class="truncate">Español</span>
+                    </button>
+                    <button onclick="quickAddPresetLang('ko', '🇰🇷', '한국어')" class="pixel-btn p-1.5 rounded bg-purple-900 text-white flex items-center gap-1 hover:bg-purple-800">
+                        <span>🇰🇷</span> <span class="truncate">한국어</span>
+                    </button>
+                    <button onclick="quickAddPresetLang('fr', '🇫🇷', 'Français')" class="pixel-btn p-1.5 rounded bg-purple-900 text-white flex items-center gap-1 hover:bg-purple-800">
+                        <span>🇫🇷</span> <span class="truncate">Français</span>
+                    </button>
+                    <button onclick="quickAddPresetLang('de', '🇩🇪', 'Deutsch')" class="pixel-btn p-1.5 rounded bg-purple-900 text-white flex items-center gap-1 hover:bg-purple-800">
+                        <span>🇩🇪</span> <span class="truncate">Deutsch</span>
+                    </button>
+                    <button onclick="quickAddPresetLang('it', '🇮🇹', 'Italiano')" class="pixel-btn p-1.5 rounded bg-purple-900 text-white flex items-center gap-1 hover:bg-purple-800">
+                        <span>🇮🇹</span> <span class="truncate">Italiano</span>
+                    </button>
+                    <button onclick="quickAddPresetLang('zh', '🇨🇳', '中文')" class="pixel-btn p-1.5 rounded bg-purple-900 text-white flex items-center gap-1 hover:bg-purple-800">
+                        <span>🇨🇳</span> <span class="truncate">中文</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Custom Language Form -->
+            <div class="flex flex-col gap-2 pt-2 border-t border-purple-900/40">
+                <div class="flex gap-2">
+                    <div class="flex-1 flex flex-col gap-1">
+                        <label id="modalAddLangNameLabel" class="text-[10px] font-pixel text-purple-300">言語名:</label>
+                        <input type="text" id="inputCustomLangName" placeholder="例: Italiano"
+                            class="p-2 rounded bg-black/50 border border-purple-500/50 text-white text-xs font-jp focus:outline-none focus:border-pink-400">
+                    </div>
+                    <div class="w-16 flex flex-col gap-1">
+                        <label class="text-[10px] font-pixel text-purple-300">国旗:</label>
+                        <input type="text" id="inputCustomLangFlag" placeholder="🇮🇹" maxlength="4"
+                            class="p-2 rounded bg-black/50 border border-purple-500/50 text-white text-center text-xs focus:outline-none focus:border-pink-400">
+                    </div>
+                    <div class="w-16 flex flex-col gap-1">
+                        <label class="text-[10px] font-pixel text-purple-300">コード:</label>
+                        <input type="text" id="inputCustomLangCode" placeholder="IT" maxlength="4"
+                            class="p-2 rounded bg-black/50 border border-purple-500/50 text-white text-center text-xs uppercase font-mono focus:outline-none focus:border-pink-400">
+                    </div>
+                </div>
+
+                <button onclick="submitCustomLanguage()"
+                    class="pixel-btn bg-pink-600 hover:bg-pink-500 text-white font-jp font-bold text-xs py-2 px-3 rounded flex items-center justify-center gap-1.5 mt-1">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span id="modalAddLangSubmitBtnText">追加してこの言語に切り替える</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: API Key Configuration -->
+    <div id="apiKeyModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="pixel-box p-5 rounded-lg max-w-sm w-full flex flex-col gap-4 bg-[#251f33] border-purple-500 shadow-2xl">
             <div class="flex justify-between items-center border-b border-purple-900/40 pb-2">
                 <div class="flex items-center gap-2">
                     <i data-lucide="key" class="w-4 h-4 text-yellow-300"></i>
@@ -689,9 +824,143 @@
         <span id="toastMessage">メッセージ</span>
     </div>
 
-    <!-- Application Script (Logic, Web Audio API Synth, Multi-language i18n, Gemini Multimodal, Quest Engine) -->
+    <!-- Application Script (Logic, Web Audio API Synth, User Profile, Custom Language Additions, Gemini Multimodal, Quest Engine) -->
     <script>
-        // --- 1. Internationalization (i18n) Dictionary: JA, PT, EN ---
+        // --- 1. User Profile State & Avatar Presets ---
+        const AVATAR_PRESETS = ['🎨', '🐱', '🎮', '🎧', '🌸', '☕', '🌙', '🦊', '🎸', '📚', '⚡', '✨', '👾', '🍙', '🍣', '🌟', '💎', '🚀'];
+        let selectedAvatarEmoji = '🎨';
+
+        let userProfile = {
+            name: "サラ (Sarah)",
+            avatar: "🎨",
+            badge: "中1 ART & JAZZ",
+            grade: "中学校第1学年 • 14歳"
+        };
+
+        function loadUserProfile() {
+            const saved = localStorage.getItem('study_camera_user_profile');
+            if (saved) {
+                try {
+                    userProfile = Object.assign(userProfile, JSON.parse(saved));
+                } catch (e) { console.error(e); }
+            }
+            selectedAvatarEmoji = userProfile.avatar || '🎨';
+            updateProfileUI();
+        }
+
+        function updateProfileUI() {
+            document.getElementById('profileAvatarDisplay').innerText = userProfile.avatar;
+            document.getElementById('profileName').innerText = userProfile.name;
+            document.getElementById('profileBadge').innerText = userProfile.badge;
+            document.getElementById('profileGradeText').innerText = userProfile.grade;
+        }
+
+        function openProfileModal() {
+            playSfx('click');
+            document.getElementById('inputProfileName').value = userProfile.name;
+            document.getElementById('inputProfileBadge').value = userProfile.badge;
+            document.getElementById('inputProfileGrade').value = userProfile.grade;
+            document.getElementById('inputCustomAvatar').value = userProfile.avatar;
+            selectedAvatarEmoji = userProfile.avatar;
+            renderAvatarPresets();
+            document.getElementById('profileModal').classList.remove('hidden');
+        }
+
+        function closeProfileModal() {
+            playSfx('click');
+            document.getElementById('profileModal').classList.add('hidden');
+        }
+
+        function renderAvatarPresets() {
+            const grid = document.getElementById('avatarPresetsGrid');
+            grid.innerHTML = '';
+            AVATAR_PRESETS.forEach(emoji => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                const isSelected = emoji === selectedAvatarEmoji;
+                btn.className = `p-1.5 rounded text-center transition-all ${isSelected ? 'bg-emerald-600 border-2 border-yellow-300 scale-110' : 'hover:bg-purple-900 border border-transparent'}`;
+                btn.innerText = emoji;
+                btn.onclick = () => {
+                    selectedAvatarEmoji = emoji;
+                    document.getElementById('inputCustomAvatar').value = emoji;
+                    renderAvatarPresets();
+                    playSfx('click');
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function saveUserProfile() {
+            const customEmoji = document.getElementById('inputCustomAvatar').value.trim();
+            userProfile.avatar = customEmoji || selectedAvatarEmoji || '🎨';
+            userProfile.name = document.getElementById('inputProfileName').value.trim() || "サラ (Sarah)";
+            userProfile.badge = document.getElementById('inputProfileBadge').value.trim() || "中1 ART & JAZZ";
+            userProfile.grade = document.getElementById('inputProfileGrade').value.trim() || "中学校第1学年 • 14歳";
+
+            localStorage.setItem('study_camera_user_profile', JSON.stringify(userProfile));
+            updateProfileUI();
+            closeProfileModal();
+            playSfx('success');
+            showToast(currentLang === 'pt' ? "✨ Perfil atualizado com sucesso!" :
+                      currentLang === 'en' ? "✨ Profile updated successfully!" :
+                      "✨ プロフィールを更新したよ！");
+        }
+
+        // --- 2. Custom Language Management (言語追加機能) ---
+        let customLanguages = [];
+        function loadCustomLanguages() {
+            const saved = localStorage.getItem('study_camera_custom_langs');
+            if (saved) {
+                try {
+                    customLanguages = JSON.parse(saved);
+                } catch (e) { console.error(e); }
+            }
+        }
+
+        function openAddLangModal() {
+            playSfx('click');
+            document.getElementById('langDropdown').classList.add('hidden');
+            document.getElementById('addLangModal').classList.remove('hidden');
+        }
+
+        function closeAddLangModal() {
+            playSfx('click');
+            document.getElementById('addLangModal').classList.add('hidden');
+        }
+
+        function quickAddPresetLang(code, flag, name) {
+            addAndSelectLanguage(code, flag, name);
+        }
+
+        function submitCustomLanguage() {
+            const name = document.getElementById('inputCustomLangName').value.trim();
+            const flag = document.getElementById('inputCustomLangFlag').value.trim() || '🌐';
+            let code = document.getElementById('inputCustomLangCode').value.trim().toUpperCase();
+
+            if (!name) {
+                showToast("言語名を入力してください");
+                return;
+            }
+            if (!code) {
+                code = name.slice(0, 2).toUpperCase();
+            }
+
+            addAndSelectLanguage(code.toLowerCase(), flag, name);
+        }
+
+        function addAndSelectLanguage(code, flag, name) {
+            // Check if already in custom or base list
+            if (!customLanguages.some(l => l.code === code)) {
+                customLanguages.push({ code, flag, name });
+                localStorage.setItem('study_camera_custom_langs', JSON.stringify(customLanguages));
+            }
+            closeAddLangModal();
+            changeLanguage(code);
+            playSfx('success');
+            showToast(`${flag} ${name} を追加しました！`);
+        }
+
+        // --- 3. Internationalization (i18n) Dictionary & Engine ---
         const I18N = {
             ja: {
                 code: 'JA',
@@ -700,9 +969,6 @@
                 app_sub: 'スタディカメラ • サラ専用 LO-FI EDITION',
                 jazz_off: 'JAZZ OFF',
                 jazz_on: 'JAZZ ON',
-                sarah_profile: 'サラ (Sarah)',
-                sarah_sub: '中1 ART & JAZZ',
-                sarah_grade: '中学校第1学年 • 14歳',
                 status_focus: '集中モード',
                 capture_title: '問題を撮影・選択',
                 sample_btn: '✨ お試し問題（中1 数学）',
@@ -756,6 +1022,7 @@
                 modal_api_sub: '※ キーはお使いのスマートフォンの端末内(localStorage)にのみ安全に保存されます。',
                 modal_save: '保存する',
                 modal_demo: 'お試しモード',
+                btn_add_lang: '言語を追加...',
                 toast_lang: '🇯🇵 言語を「日本語」に切り替えました',
                 toast_photo_loaded: '📸 問題の写真をセットしました！',
                 toast_sample_loaded: '✨ お試し問題（中1 数学: 一次方程式）をセット！',
@@ -772,9 +1039,6 @@
                 app_sub: 'STUDY CAMERA • EDIÇÃO LO-FI DA SARAH',
                 jazz_off: 'JAZZ OFF',
                 jazz_on: 'JAZZ ON',
-                sarah_profile: 'Sarah (サラ)',
-                sarah_sub: '中1 ART & JAZZ',
-                sarah_grade: '1º Ano do Ensino Fundamental II • 14 Anos',
                 status_focus: 'Modo Foco',
                 capture_title: 'Capturar Questão',
                 sample_btn: '✨ Testar Exemplo (中1 Matemática)',
@@ -828,6 +1092,7 @@
                 modal_api_sub: '※ A chave é salva apenas no armazenamento local (localStorage) do seu celular.',
                 modal_save: 'Salvar',
                 modal_demo: 'Modo Demo',
+                btn_add_lang: 'Adicionar Idioma...',
                 toast_lang: '🇧🇷 Idioma alterado para Português!',
                 toast_photo_loaded: '📸 Foto da questão carregada com sucesso!',
                 toast_sample_loaded: '✨ Exemplo carregado: Equação do 1º Grau (中1 数学)',
@@ -844,9 +1109,6 @@
                 app_sub: "STUDY CAMERA • SARAH'S LO-FI EDITION",
                 jazz_off: 'JAZZ OFF',
                 jazz_on: 'JAZZ ON',
-                sarah_profile: 'Sarah (サラ)',
-                sarah_sub: '7th Gr. ART & JAZZ',
-                sarah_grade: '7th Grade (Middle School 1st Yr) • 14 yrs',
                 status_focus: 'Focus Mode',
                 capture_title: 'Capture Question',
                 sample_btn: '✨ Try Sample (7th Gr. Math)',
@@ -900,6 +1162,7 @@
                 modal_api_sub: '※ The key is securely stored only on your phone (localStorage).',
                 modal_save: 'Save',
                 modal_demo: 'Demo Mode',
+                btn_add_lang: 'Add Language...',
                 toast_lang: '🇺🇸 Language switched to English!',
                 toast_photo_loaded: '📸 Question photo loaded!',
                 toast_sample_loaded: '✨ Sample loaded: Linear Equations (7th Gr. Math)',
@@ -911,9 +1174,9 @@
             }
         };
 
-        // --- 2. Global Application State ---
+        // --- 4. Global State ---
         let currentLang = localStorage.getItem('study_camera_lang') || 'ja';
-        let selectedMode = 'standard'; // 'standard' (スピード解答) or 'detailed' (でんせつ解説)
+        let selectedMode = 'standard';
         let selectedSubject = 'auto';
         let base64Image = null;
         let isAudioPlaying = false;
@@ -923,14 +1186,14 @@
         let userStats = { level: 14, xp: 750, maxXp: 1000, solvedCount: 0 };
         let lastMarkdownResponse = "";
 
-        // --- 3. Language Switcher Logic ---
+        // --- 5. Language Switcher Dropdown & Dynamic Rendering ---
         function toggleLangDropdown() {
             playSfx('click');
             const menu = document.getElementById('langDropdown');
+            renderLangMenu();
             menu.classList.toggle('hidden');
         }
 
-        // Close dropdown when tapping elsewhere
         document.addEventListener('click', (e) => {
             const btn = document.getElementById('langMenuBtn');
             const menu = document.getElementById('langDropdown');
@@ -939,29 +1202,71 @@
             }
         });
 
+        function getAllLanguages() {
+            const list = [
+                { code: 'ja', flag: '🇯🇵', name: '日本語' },
+                { code: 'pt', flag: '🇧🇷', name: 'Português' },
+                { code: 'en', flag: '🇺🇸', name: 'English' }
+            ];
+            customLanguages.forEach(l => {
+                if (!list.some(item => item.code === l.code)) {
+                    list.push(l);
+                }
+            });
+            return list;
+        }
+
+        function renderLangMenu() {
+            const container = document.getElementById('langListContainer');
+            container.innerHTML = '';
+            const allLangs = getAllLanguages();
+
+            allLangs.forEach(lang => {
+                const btn = document.createElement('button');
+                btn.className = `pixel-btn text-left px-2 py-1.5 rounded text-[11px] font-jp flex items-center justify-between hover:bg-purple-900 text-white ${lang.code === currentLang ? 'bg-purple-900 border-yellow-400' : 'bg-[#1e1b2e]'}`;
+                btn.innerHTML = `
+                    <div class="flex items-center gap-1.5">
+                        <span>${lang.flag}</span>
+                        <span class="font-bold">${lang.name}</span>
+                    </div>
+                    ${lang.code === currentLang ? '<span class="text-yellow-300 text-[9px] font-pixel">ON</span>' : ''}
+                `;
+                btn.onclick = () => changeLanguage(lang.code);
+                container.appendChild(btn);
+            });
+
+            document.getElementById('btnAddLangDropdownText').innerText = I18N[currentLang]?.btn_add_lang || "言語を追加...";
+            lucide.createIcons();
+        }
+
         function changeLanguage(lang) {
             playSfx('click');
             currentLang = lang;
             localStorage.setItem('study_camera_lang', lang);
             document.getElementById('langDropdown').classList.add('hidden');
             applyTranslations(lang);
-            showToast(I18N[lang].toast_lang);
+            renderResolutionLangButtons();
+            
+            const langObj = getAllLanguages().find(l => l.code === lang);
+            const flag = langObj?.flag || '🌐';
+            const name = langObj?.name || lang;
+            showToast(`${flag} ${name}`);
         }
 
         function applyTranslations(lang) {
-            const t = I18N[lang];
+            const t = I18N[lang] || I18N['en'] || I18N['ja'];
+            const langObj = getAllLanguages().find(l => l.code === lang);
+
             document.documentElement.lang = lang;
 
             // Header Language Badge
-            document.getElementById('currentLangFlag').innerText = t.flag;
-            document.getElementById('currentLangCode').innerText = t.code;
+            document.getElementById('currentLangFlag').innerText = langObj?.flag || t.flag || '🌐';
+            document.getElementById('currentLangCode').innerText = langObj?.code?.toUpperCase() || t.code;
             document.getElementById('headerSubtitle').innerText = t.app_sub;
 
-            // Profile & Stats
-            document.getElementById('profileName').innerText = t.sarah_profile;
-            document.getElementById('profileBadge').innerText = t.sarah_sub;
+            // Profile & Stats (User profile values preserved)
+            updateProfileUI();
             document.getElementById('profileStatusText').innerHTML = `<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ${t.status_focus}`;
-            document.getElementById('profileGradeText').innerText = t.sarah_grade;
 
             // Capture Section
             document.getElementById('captureSectionTitle').innerText = t.capture_title;
@@ -1028,7 +1333,7 @@
             lucide.createIcons();
         }
 
-        // --- 4. Web Audio API: Cozy Lo-Fi Jazz Synthesizer & Retro SFX ---
+        // --- 6. Web Audio API Synthesizer & SFX ---
         let audioCtx = null;
         let lofiInterval = null;
         let masterGain = null;
@@ -1046,17 +1351,14 @@
             }
         }
 
-        // Plays a warm, filtered 7th/9th jazz chord progression (Lo-Fi Rhode-like tone)
         function playJazzChord(frequencies, duration = 3.2) {
             if (!audioCtx || !isAudioPlaying) return;
             const now = audioCtx.currentTime;
 
-            // Warm low-pass filter for the iconic muffled Lo-Fi aesthetic
             const filter = audioCtx.createBiquadFilter();
             filter.type = 'lowpass';
             filter.frequency.setValueAtTime(650, now);
 
-            // Subtle tape flutter LFO
             const lfo = audioCtx.createOscillator();
             const lfoGain = audioCtx.createGain();
             lfo.frequency.setValueAtTime(0.5, now);
@@ -1067,11 +1369,10 @@
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 
-                osc.type = 'triangle'; // Smooth mellow vintage keyboard timbre
+                osc.type = 'triangle';
                 osc.frequency.setValueAtTime(freq, now);
                 lfoGain.connect(osc.detune);
 
-                // Gentle envelope (soft attack, slow decay)
                 gain.gain.setValueAtTime(0.001, now);
                 gain.gain.exponentialRampToValueAtTime(0.12, now + 0.15);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
@@ -1087,7 +1388,6 @@
             lfo.stop(now + duration);
         }
 
-        // Lo-Fi Jazz Chord Progression (Dm9 -> G13 -> Cmaj9 -> Am9)
         const jazzProgression = [
             [293.66, 349.23, 440.00, 523.25, 659.25], // Dm9
             [196.00, 293.66, 369.99, 440.00, 659.25], // G13
@@ -1111,7 +1411,6 @@
                 showToast("🎵 Lo-Fi Beats ON");
                 playSfx('click');
 
-                // Start Chord Loop
                 playJazzChord(jazzProgression[chordIndex]);
                 lofiInterval = setInterval(() => {
                     chordIndex = (chordIndex + 1) % jazzProgression.length;
@@ -1125,7 +1424,6 @@
             }
         }
 
-        // Retro Sound Effects (Synthesized Blips)
         function playSfx(type) {
             if (!sfxEnabled) return;
             initAudioContext();
@@ -1142,7 +1440,6 @@
                 osc.start(now);
                 osc.stop(now + 0.05);
             } else if (type === 'success') {
-                // Happy Level-up Arpeggio (C5 -> E5 -> G5 -> C6)
                 [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
                     const g = audioCtx.createGain();
@@ -1192,7 +1489,7 @@
             lucide.createIcons();
         }
 
-        // --- 5. Image Capture & Preview Management ---
+        // --- 7. Image Capture & Preview Management ---
         function triggerCameraCapture() {
             playSfx('camera');
             document.getElementById('cameraInput').click();
@@ -1214,7 +1511,7 @@
                 document.getElementById('previewPlaceholder').classList.add('hidden');
                 document.getElementById('imageControlsOverlay').classList.remove('hidden');
                 playSfx('camera');
-                showToast(I18N[currentLang].toast_photo_loaded);
+                showToast(I18N[currentLang]?.toast_photo_loaded || "📸 Photo loaded!");
             };
             reader.readAsDataURL(file);
         }
@@ -1233,7 +1530,6 @@
             playSfx('click');
         }
 
-        // Drag & Drop Support
         const dropZone = document.getElementById('imagePreviewContainer');
         ['dragenter', 'dragover'].forEach(eventName => {
             dropZone.addEventListener(eventName, (e) => {
@@ -1253,7 +1549,7 @@
             if (files.length) handleFile(files[0]);
         });
 
-        // --- 6. Middle School 1st Year (中1) Sample Question Generator ---
+        // --- 8. Middle School 1st Year (中1) Sample Question Generator ---
         function loadSampleQuestion() {
             playSfx('click');
             const canvas = document.createElement('canvas');
@@ -1261,11 +1557,9 @@
             canvas.height = 360;
             const ctx = canvas.getContext('2d');
 
-            // Dark anime-style worksheet background
             ctx.fillStyle = "#1e1b2e";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Grid lines
             ctx.strokeStyle = "rgba(192, 132, 252, 0.15)";
             ctx.lineWidth = 1;
             for (let x = 0; x < canvas.width; x += 30) {
@@ -1275,12 +1569,10 @@
                 ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
             }
 
-            // Outer border
             ctx.strokeStyle = "#c084fc";
             ctx.lineWidth = 4;
             ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
 
-            // Header text
             ctx.fillStyle = "#fde047";
             ctx.font = "bold 20px 'Noto Sans JP', sans-serif";
             const headerTitle = currentLang === 'pt' ? "【1º Ano Ensino Fundamental II • Equação do 1º Grau】" :
@@ -1288,7 +1580,6 @@
                                 "【中学校第1学年 数学ワーク • 1次方程式】";
             ctx.fillText(headerTitle, 30, 50);
 
-            // Question prompt
             ctx.fillStyle = "#ffffff";
             ctx.font = "18px 'Noto Sans JP', sans-serif";
             const questionPrompt = currentLang === 'pt' ? "Questão 1. Resolva a seguinte equação:" :
@@ -1296,7 +1587,6 @@
                                    "問 1. 次の方程式を解きなさい。";
             ctx.fillText(questionPrompt, 40, 100);
 
-            // Equation Box
             ctx.fillStyle = "#251f33";
             ctx.fillRect(60, 130, 520, 90);
             ctx.strokeStyle = "#f472b6";
@@ -1307,14 +1597,13 @@
             ctx.font = "bold 32px monospace";
             ctx.fillText("3x - 5 = x + 7", 200, 185);
 
-            // Study tip note
             ctx.fillStyle = "#94a3b8";
             ctx.font = "15px 'Noto Sans JP', sans-serif";
             const tipNote = currentLang === 'pt' ? "※ Use a transposição (移項) para agrupar x na esquerda e números na direita!" :
                             currentLang === 'en' ? "※ Use transposition (移項) to collect x on the left and numbers on the right!" :
                             "※ 移項(いこう)を使って x を左辺に、数字を右辺に集めよう！";
             ctx.fillText(tipNote, 40, 280);
-            ctx.fillText("Sarah's Study Notebook • Practice #04", 40, 320);
+            ctx.fillText(`${userProfile.name}'s Notebook • Practice #04`, 40, 320);
 
             const dataUrl = canvas.toDataURL('image/jpeg');
             base64Image = dataUrl.split(',')[1];
@@ -1323,10 +1612,10 @@
             document.getElementById('previewPlaceholder').classList.add('hidden');
             document.getElementById('imageControlsOverlay').classList.remove('hidden');
             setSubject('math');
-            showToast(I18N[currentLang].toast_sample_loaded);
+            showToast(I18N[currentLang]?.toast_sample_loaded || "✨ Sample loaded!");
         }
 
-        // --- 7. Mode & Subject Toggles ---
+        // --- 9. Mode & Subject Toggles ---
         function setMode(mode) {
             playSfx('click');
             selectedMode = mode;
@@ -1335,7 +1624,7 @@
             const badgeStd = document.getElementById('badgeStd');
             const badgeDet = document.getElementById('badgeDet');
             const descTag = document.getElementById('modeDescriptionTag');
-            const t = I18N[currentLang];
+            const t = I18N[currentLang] || I18N.ja;
 
             if (mode === 'standard') {
                 btnStd.className = "pixel-btn bg-purple-900/90 border-2 border-purple-400 text-white p-2.5 rounded-md text-left flex flex-col gap-1 transition-all";
@@ -1364,7 +1653,7 @@
             });
         }
 
-        // --- 8. Gemini Multimodal Analysis with Multi-language Prompt Support ---
+        // --- 10. Gemini Multimodal Analysis with Dynamic Language Support ---
         async function analyzeImage() {
             const apiKey = getSavedApiKey();
 
@@ -1397,74 +1686,15 @@
             loadingSection.scrollIntoView({ behavior: 'smooth' });
             playSfx('click');
 
-            // Adapt system prompt language dynamically
-            let systemPrompt = "";
-            if (currentLang === 'ja') {
-                const detailInstruction = selectedMode === 'detailed'
-                    ? `【でんせつ解説モード（丁寧なステップ解説）】
-1. 🎯 **問題の整理とポイント**: 問題文が何を求めているのかを優しく整理する。
-2. 💡 **解き方のステップと論理**: 途中式や思考の道筋を1行ずつ丁寧に解説（なぜその計算をするのか）。
-3. 🏆 **最終的な答え**: 枠や太字で一目でわかるように強調。
-4. 🌸 **定期テスト対策！重要キーワード**: 今回の問題に出てきた重要語句や公式（例: 移項、1次方程式）の要点。
-5. 🎨 **サラのためのアートメモ**: マイクラやイラストなどのビジュアル感覚で直感的に覚えられるワンポイントのコツ。`
-                    : `【スピード解答モード（要点チェック）】
-1. 🎯 **何をする問題か**: 1行でズバリ整理。
-2. 💡 **3ステップ解説**: 最短の途中式と要点。
-3. 🏆 **答え**: 明確に提示。
-4. 🌸 **覚えるルール**: この問題の必須公式・ルール。`;
+            const currentLangObj = getAllLanguages().find(l => l.code === currentLang);
+            const targetLangName = currentLangObj?.name || 'Japanese';
 
-                systemPrompt = `あなたは、日本の14歳（中学校1年生）の女子生徒「サラさん」専用のAI学習サポーターです。
-- **すべて自然な日本語**で答えてください。
-- 中学1年生が学校で習う言葉遣い・記号・公式（です・ます調）を使ってください。
-- 画像に写っている教科書・問題集・学校のプリント・定期テストの日本語テキストや数式、図を正確に読み取ってください。
-- 見やすいMarkdown形式（## 見出し、- 箇条書き、**太字**での強調）で整理してください。
-
-${detailInstruction}`;
-
-            } else if (currentLang === 'pt') {
-                const detailInstruction = selectedMode === 'detailed'
-                    ? `【Modo Densetsu (Explicação Detalhada Passo a Passo)】
-1. 🎯 **O Que a Questão Está Pedindo**: Explicação simples e direta do objetivo.
-2. 💡 **Passo a Passo com Lógica**: Explique a resolução linha por linha, mostrando onde cada número e sinal vai.
-3. 🏆 **Resposta Final**: Destacada com precisão.
-4. 🌸 **Glossário & Termos em Japonês**: Explique as palavras-chave japonesas presentes na questão (ex: 移項, 方程式, 光合成) com significado e leitura em romaji.
-5. 🎨 **Dica da Sarah (Macete Artístico)**: Uma analogia visual (estilo blocos de Minecraft ou desenho) para fixar o conceito.`
-                    : `【Modo Resposta Direta (Rápida)】
-1. 🎯 **Objetivo**: Em 1 linha.
-2. 💡 **Resolução em 3 Passos**: Direto ao ponto.
-3. 🏆 **Resposta Final**: Destacada.
-4. 🌸 **Termo Chave em Japonês**: Vocabulário escolar essencial.`;
-
-                systemPrompt = `Você é o Tutor de Estudos Inteligente do "Study Camera", feito com carinho especialmente para a Sarah: uma estudante de 14 anos que estuda no Japão (中学校1年生).
-- Responda em Português acolhedor, didático e claro para uma estudante de 14 anos.
-- Extraia com precisão o texto em japonês de livros, testes escolares e folhas de exercício.
-- Mantenha e explique os termos técnicos originais em japonês quando presentes.
-- Formate a resposta rigorosamente em Markdown com títulos ## e marcadores.
-
-${detailInstruction}`;
-
-            } else { // en
-                const detailInstruction = selectedMode === 'detailed'
-                    ? `【Densetsu Detailed Walkthrough Mode】
-1. 🎯 **Problem Summary & Goal**: Clearly state what is being asked in friendly terms.
-2. 💡 **Step-by-Step Logic**: Explain each step line by line (why terms move, sign changes).
-3. 🏆 **Final Answer**: Clearly boxed or highlighted.
-4. 🌸 **Japanese School Keywords**: Explain Japanese terms in the problem (e.g., 移項, 方程式) with romaji reading and meaning.
-5. 🎨 **Sarah's Art Note**: A visual or Minecraft-style analogy to remember the concept effortlessly.`
-                    : `【Quick Answer Mode】
-1. 🎯 **Goal**: 1 line summary.
-2. 💡 **3-Step Solution**: Fast and clear.
-3. 🏆 **Final Answer**: Highlighted.
-4. 🌸 **Key Rule**: Essential formula/rule.`;
-
-                systemPrompt = `You are the AI Study Tutor for Study Camera, created for Sarah, a 14-year-old 7th grade student (中学校1年生) studying in Japan.
-- Respond in clear, encouraging English suitable for a 14-year-old student.
-- Read Japanese text from textbooks, test sheets, and worksheets accurately.
-- Highlight and explain key Japanese terms with romaji so she masters her Japanese school curriculum.
-- Format cleanly in Markdown with ## headings and bullet points.
-
-${detailInstruction}`;
-            }
+            let systemPrompt = `You are the AI Study Tutor for Study Camera, tutoring ${userProfile.name} (14-year-old student, 7th grade / 中学校1年生 in Japan).
+- Primary Output Language: ${targetLangName}.
+- If the target language is Japanese: use natural, polite yet encouraging Japanese (です・ます調) suited for a 7th grader (中1).
+- If the target language is Portuguese, English or any other language: provide the explanation in that language, but preserve and explain key Japanese school terms (e.g., 移項, 方程式, 光合成) so the student excels in Japanese middle school!
+- Mode: ${selectedMode === 'detailed' ? 'Detailed Step-by-Step with Logic & Study Tips' : 'Quick 3-step Solution'}.
+- Format cleanly in Markdown with ## headings and bullet points.`;
 
             try {
                 let markdownResponse = "";
@@ -1501,8 +1731,7 @@ ${detailInstruction}`;
                 lastMarkdownResponse = markdownResponse;
                 resultContent.innerHTML = marked.parse(markdownResponse);
 
-                // Update Badges
-                const t = I18N[currentLang];
+                const t = I18N[currentLang] || I18N.ja;
                 document.getElementById('resultSubjectBadge').innerText = `${t.subject_label} ${selectedSubject.toUpperCase()}`;
                 document.getElementById('resultModeBadge').innerText = `${t.mode_title}: ${selectedMode === 'detailed' ? t.mode_det_name : t.mode_std_name}`;
 
@@ -1525,255 +1754,164 @@ ${detailInstruction}`;
                 alert("Erro: " + error.message);
             } finally {
                 btnAnalyze.disabled = false;
-                btnAnalyzeText.innerText = I18N[currentLang].nav_solve;
+                btnAnalyzeText.innerText = I18N[currentLang]?.nav_solve || "かいけつ！";
                 lucide.createIcons();
             }
         }
 
-        // Pre-computed authentic simulated responses in JA, PT, and EN
         function getSimulatedResponse(mode, lang) {
             if (lang === 'pt') {
-                if (mode === 'detailed') {
-                    return `## 🎯 Entendendo a Questão (1次方程式)
-Temos a equação: **\`3x - 5 = x + 7\`**  
-Nosso objetivo no 1º ano do Chugakko (中1) é encontrar o valor de **\`x\`** que equilibra perfeitamente os dois lados da igualdade!
+                return mode === 'detailed' ?
+`## 🎯 Entendendo a Questão (1次方程式)
+Equação: **\`3x - 5 = x + 7\`**  
+Objetivo: encontrar o valor de **\`x\`** que equilibra os dois lados da igualdade!
 
 ---
 
-## 💡 Passo a Passo com a Lógica (Passo a Passo)
-
-### 1º Passo: Fazer a Transposição (移項 - Ikō)
-- Tudo que tem **\`x\`** vai para o lado esquerdo (左辺 - Sahen).
-- Todos os números normais vão para o lado direito (右辺 - Uhen).
-- *Regra de ouro:* Ao cruzar o sinal de igual (\`=\`), o sinal inverte (+ vira -, - vira +)!
-
-\`\`\`
-3x - x = 7 + 5
-\`\`\`
-
-### 2º Passo: Fazer as contas de cada lado
-- Lado esquerdo: \`3x - 1x = 2x\`
-- Lado direito: \`7 + 5 = 12\`
-
-\`\`\`
-2x = 12
-\`\`\`
-
-### 3º Passo: Isolar o x
-Dividimos ambos os lados pelo número que está multiplicando o \`x\` (que é o 2):
-\`\`\`
-x = 12 ÷ 2
-x = 6
-\`\`\`
-
----
-
-## 🏆 Resposta Final
-> **\`x = 6\`**  
-> *(Verificação: 3·(6) - 5 = 13  |  6 + 7 = 13. Perfeitamente equilibrado!)*
-
----
-
-## 🌸 Glossário em Japonês (Vocabulário da Prova)
-- **1次方程式 (いちじほうていしき / Ichiji Hōteishiki)**: Equação do 1º grau.
-- **移項 (いこう / Ikō)**: Transposição de termos mudando o sinal.
-- **左辺 (さへん / Sahen) / 右辺 (うへん / Uhen)**: Lado esquerdo e lado direito.
-
----
-
-## 🎨 Dica da Sarah (Macete Visual)
-*Imagine o sinal de \`=\` como uma ponte mágica do Minecraft: se um bloco positivo atravessa a ponte, ele vira negativo; se é negativo, vira positivo! Agrupe os blocos iguais antes de finalizar.*`;
-                } else {
-                    return `## 🎯 Resumo da Questão
-Equação: **\`3x - 5 = x + 7\`**
-
-## 💡 Resolução em 3 Passos:
-1. **Transponha os termos (移項)**: Agrupe x na esquerda e números na direita (invertendo o sinal):  
+## 💡 Passo a Passo com a Lógica
+1. **Transposição de Termos (移項 - Ikō)**:  
+   Mova os termos com \`x\` para o lado esquerdo e os números para o direito (invertendo os sinais):  
    \`3x - x = 7 + 5\`
 2. **Simplifique cada lado**:  
    \`2x = 12\`
-3. **Divida pelo coeficiente (2)**:  
+3. **Isole o x dividindo por 2**:  
+   \`x = 12 ÷ 2\`  
    \`x = 6\`
+
+---
 
 ## 🏆 Resposta Final
 > **\`x = 6\`**
 
-## 🌸 Termo Chave
-- **移項 (いこう)**: Mudar de lado trocando o sinal (+ vira -, - vira +).`;
-                }
+## 🌸 Glossário em Japonês
+- **1次方程式 (Ichiji Hōteishiki)**: Equação do 1º grau.
+- **移項 (Ikō)**: Transposição de termos com inversão de sinal.`
+                :
+`## 🎯 Resumo da Questão
+Equação: **\`3x - 5 = x + 7\`**
+
+## 💡 Resolução em 3 Passos:
+1. \`3x - x = 7 + 5\`
+2. \`2x = 12\`
+3. \`x = 6\`
+
+## 🏆 Resposta Final: **\`x = 6\`**`;
             } else if (lang === 'en') {
-                if (mode === 'detailed') {
-                    return `## 🎯 Problem Overview (1次方程式)
+                return mode === 'detailed' ?
+`## 🎯 Problem Overview (1次方程式)
 Solve the equation: **\`3x - 5 = x + 7\`**  
-Our goal in 7th grade math is to find the value of **\`x\`** that makes both sides perfectly balanced!
+Our goal is to find the value of **\`x\`** that balances both sides!
 
 ---
 
 ## 💡 Step-by-Step Logic
-
-### Step 1: Collect like terms via Transposition (移項 - Ikō)
-- Move terms with **\`x\`** to the left side (左辺 - Sahen).
-- Move plain numbers to the right side (右辺 - Uhen).
-- *Key rule:* Crossing the equal sign (\`=\`) flips the sign (+ becomes -, - becomes +)!
-
-\`\`\`
-3x - x = 7 + 5
-\`\`\`
-
-### Step 2: Simplify both sides
-- Left side: \`3x - 1x = 2x\`
-- Right side: \`7 + 5 = 12\`
-
-\`\`\`
-2x = 12
-\`\`\`
-
-### Step 3: Divide by coefficient (2)
-\`\`\`
-x = 12 ÷ 2
-x = 6
-\`\`\`
-
----
-
-## 🏆 Final Answer
-> **\`x = 6\`**  
-> *(Check: 3·(6) - 5 = 13  |  6 + 7 = 13. Perfectly balanced!)*
-
----
-
-## 🌸 Key Japanese Terms for Tests
-- **1次方程式 (Ichiji Hōteishiki)**: Linear Equation.
-- **移項 (Ikō)**: Transposition (moving across \`=\` with sign change).
-- **左辺 (Sahen) / 右辺 (Uhen)**: Left-hand side / Right-hand side.
-
----
-
-## 🎨 Sarah's Art Tip
-*Think of the equal sign (\`=\`) as a Minecraft nether portal: passing a block through inverts its polarity. Sort similar blocks first, then solve!*`;
-                } else {
-                    return `## 🎯 Summary
-Equation: **\`3x - 5 = x + 7\`**
-
-## 💡 3-Step Solution:
-1. **Transpose terms (移項)**:  
+1. **Transposition (移項 - Ikō)**:  
+   Move \`x\` terms to the left, numbers to the right (flip signs):  
    \`3x - x = 7 + 5\`
 2. **Combine like terms**:  
    \`2x = 12\`
 3. **Divide by 2**:  
    \`x = 6\`
 
+---
+
 ## 🏆 Final Answer
 > **\`x = 6\`**
 
-## 🌸 Key Rule
-- **移項 (Ikō)**: Flip signs when moving across the equals sign.`;
-                }
+## 🌸 Key Japanese Terms
+- **1次方程式 (Ichiji Hōteishiki)**: Linear Equation.
+- **移項 (Ikō)**: Transposing terms across the equals sign.`
+                :
+`## 🎯 Problem Summary
+Equation: **\`3x - 5 = x + 7\`**
+
+## 💡 3-Step Solution:
+1. \`3x - x = 7 + 5\`
+2. \`2x = 12\`
+3. \`x = 6\`
+
+## 🏆 Final Answer: **\`x = 6\`**`;
             } else { // ja
-                if (mode === 'detailed') {
-                    return `## 🎯 問題の整理とポイント（1次方程式）
+                return mode === 'detailed' ?
+`## 🎯 問題の整理とポイント（1次方程式）
 解く方程式：**\`3x - 5 = x + 7\`**  
-この問題は、中1の数学で一番大切な**「1次方程式」**の基本問題です。  
-目標は、天びんの左右をつり合わせながら、最後に **\`x = (数字)\`** の形にすることだよ！
+目標は、天びんの左右をつり合わせながら、最後に **\`x = (数字)\`** の形にすること！
 
 ---
 
 ## 💡 解き方のステップと論理（途中式）
-
-### 【ステップ 1】文字と数字を分ける（移項 - いこう）
-等号（\`=\`）をまたいで反対側に引っ越しさせることを**移項**といいます。  
-引っ越しのルールはたった1つ：**「符号を逆にする（+ は - に、- は + に！）」**
-
-- 左辺（左側）に **\`x\`** のついた項を集める：右側の \`+x\` を左へ移項して \`-x\` に！
-- 右辺（右側）に**数字だけ**の項を集める：左側の \`-5\` を右へ移項して \`+5\` に！
-
-\`\`\`
-3x - x = 7 + 5
-\`\`\`
-
-### 【ステップ 2】それぞれの側を計算してまとめる
-- 左辺：\`3x - 1x = 2x\`
-- 右辺：\`7 + 5 = 12\`
-
-\`\`\`
-2x = 12
-\`\`\`
-
-### 【ステップ 3】x の係数（前の数字）で両辺を割る
-\`x\` にくっついている数字「\`2\`」で両側を割って、\`x\` をひとりぼっち（1x）にします。
-\`\`\`
-x = 12 ÷ 2
-x = 6
-\`\`\`
+1. **移項（いこう）する**:  
+   文字を左辺、数字を右辺へ引っ越し（符号を反転！）  
+   \`3x - x = 7 + 5\`
+2. **両辺を計算する**:  
+   \`2x = 12\`
+3. **x の係数（2）で割る**:  
+   \`x = 12 ÷ 2\`  
+   \`x = 6\`
 
 ---
 
 ## 🏆 最終的な答え
-> **\`x = 6\`**  
-> *(たしかめ算: 左辺 3×6 - 5 = 13、右辺 6 + 7 = 13。両方とも13になってバッチリつり合っています！)*
-
----
+> **\`x = 6\`**
 
 ## 🌸 定期テスト対策！重要キーワード
 - **移項（いこう）**: 等号（\`=\`）の反対側に項を動かすこと。**必ず符号が逆**になる！
-- **左辺・右辺・両辺（さへん・うへん・りょうへん）**: イコールの左側が左辺、右側が右辺、合わせて両辺。
-- **方程式の解（かい）**: 方程式を成り立たせる文字の値のこと。
-
----
+- **左辺・右辺（さへん・うへん）**: イコールの左と右。
 
 ## 🎨 サラのためのアートメモ
-*「イコール（\`=\`）は、マイクラのポータル（ゲート）のようなもの」とイメージしてみてね！  
-ゲートをくぐって反対の世界に行くと、ブロックの属性が反転します（プラスがマイナスへ、マイナスがプラスへ）。  
-同じ種類のブロック同士をきれいに仕分けてからまとめると、計算ミスがゼロになるよ！*`;
-                } else {
-                    return `## 🎯 問題の要点
+*「イコールはマイクラのネザーゲート」！通り抜けると属性が反転します（+が-へ）。*`
+                :
+`## 🎯 問題の要点
 方程式 **\`3x - 5 = x + 7\`** を解く問題。
 
 ## 💡 3ステップ要点解説
-1. **移項（いこう）する**: 文字を左へ、数字を右へ（符号を反転！）  
-   \`3x - x = 7 + 5\`
-2. **両辺をまとめる**:  
-   \`2x = 12\`
-3. **x の係数「2」で割る**:  
-   \`x = 6\`
+1. **移項**: \`3x - x = 7 + 5\`
+2. **計算**: \`2x = 12\`
+3. **答え**: \`x = 6\`
 
-## 🏆 答え
-> **\`x = 6\`**
-
-## 🌸 覚えるルール
-- **移項の法則**: イコールをまたぐと符号がひっくり返る！（+ は -、- は +）`;
-                }
+## 🏆 答え: **\`x = 6\`**`;
             }
         }
 
-        // --- 9. Dynamic Resolution Translation Feature ---
+        // --- 11. Resolution Translation Feature & Dynamic Buttons ---
         function toggleResolutionTranslateMenu() {
             playSfx('click');
             const bar = document.getElementById('resolutionTranslateBar');
+            renderResolutionLangButtons();
             bar.classList.toggle('hidden');
         }
 
-        async function translateCurrentResolution(targetLang) {
+        function renderResolutionLangButtons() {
+            const container = document.getElementById('resolutionLangOptions');
+            container.innerHTML = '';
+            const allLangs = getAllLanguages();
+
+            allLangs.forEach(lang => {
+                const btn = document.createElement('button');
+                btn.className = "pixel-btn px-2 py-1 bg-purple-900 hover:bg-purple-800 text-white rounded text-[10px] font-jp flex items-center gap-1";
+                btn.innerHTML = `<span>${lang.flag}</span> <span>${lang.name}</span>`;
+                btn.onclick = () => translateCurrentResolution(lang.code, lang.name);
+                container.appendChild(btn);
+            });
+        }
+
+        async function translateCurrentResolution(targetLangCode, targetLangName) {
             playSfx('click');
-            showToast(I18N[currentLang].toast_translating);
+            showToast(I18N[currentLang]?.toast_translating || "🌐 Translating...");
             const resultContent = document.getElementById('resultContent');
 
-            // If we are using the sample/demo response, load target language immediately
             if (isDemoMode || !getSavedApiKey()) {
-                const translatedMd = getSimulatedResponse(selectedMode, targetLang);
+                const translatedMd = getSimulatedResponse(selectedMode, targetLangCode);
                 lastMarkdownResponse = translatedMd;
                 resultContent.innerHTML = marked.parse(translatedMd);
-                showToast(I18N[targetLang].toast_translated);
+                showToast(I18N[currentLang]?.toast_translated || "✨ Translation completed!");
                 return;
             }
 
-            // If using Gemini API, translate via API
             try {
                 const apiKey = getSavedApiKey();
-                const targetLangName = targetLang === 'pt' ? 'Portuguese (Brazil)' :
-                                       targetLang === 'en' ? 'English' : 'Japanese';
-                const prompt = `Translate this study resolution for a 14-year-old student into ${targetLangName}. 
-Maintain all Markdown formatting (headings ##, bold, bullet points), keep mathematical formulas intact, and explain any Japanese technical terms clearly:
+                const prompt = `Translate this school study resolution for a 14-year-old student into ${targetLangName}. 
+Maintain all Markdown formatting (headings ##, bold, bullet points), keep mathematical formulas intact, and explain any Japanese technical terms:
 
 ${lastMarkdownResponse}`;
 
@@ -1786,26 +1924,25 @@ ${lastMarkdownResponse}`;
                     })
                 });
 
-                if (!response.ok) throw new Error("Translation request failed");
+                if (!response.ok) throw new Error("Translation failed");
                 const data = await response.json();
                 const translatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (translatedText) {
                     lastMarkdownResponse = translatedText;
                     resultContent.innerHTML = marked.parse(translatedText);
-                    showToast(I18N[targetLang].toast_translated);
+                    showToast(I18N[currentLang]?.toast_translated || "✨ Translation completed!");
                     playSfx('success');
                 }
             } catch (err) {
                 console.error(err);
-                // Fallback to simulated translation
-                const translatedMd = getSimulatedResponse(selectedMode, targetLang);
+                const translatedMd = getSimulatedResponse(selectedMode, targetLangCode);
                 lastMarkdownResponse = translatedMd;
                 resultContent.innerHTML = marked.parse(translatedMd);
-                showToast(I18N[targetLang].toast_translated);
+                showToast(I18N[currentLang]?.toast_translated || "✨ Translation completed!");
             }
         }
 
-        // --- 10. Interactive Quest / Quiz Engine (Multi-language) ---
+        // --- 12. Interactive Quest / Quiz Engine ---
         const sampleQuestsByLang = {
             ja: [
                 {
@@ -1894,7 +2031,7 @@ ${lastMarkdownResponse}`;
         function renderQuestQuestion() {
             const list = sampleQuestsByLang[currentLang] || sampleQuestsByLang.ja;
             const q = list[currentQuestIndex];
-            const t = I18N[currentLang];
+            const t = I18N[currentLang] || I18N.ja;
 
             document.getElementById('questQuestionNumber').innerText = t.quest_q_num(currentQuestIndex + 1, list.length);
             document.getElementById('questScoreTracker').innerText = t.quest_score(currentQuestScore, list.length);
@@ -1918,7 +2055,7 @@ ${lastMarkdownResponse}`;
         function selectQuestOption(selectedIndex) {
             const list = sampleQuestsByLang[currentLang] || sampleQuestsByLang.ja;
             const q = list[currentQuestIndex];
-            const t = I18N[currentLang];
+            const t = I18N[currentLang] || I18N.ja;
             const buttons = document.getElementById('questOptionsContainer').querySelectorAll('button');
             buttons.forEach(b => b.disabled = true);
 
@@ -1960,7 +2097,8 @@ ${lastMarkdownResponse}`;
             } else {
                 document.getElementById('questActiveView').classList.add('hidden');
                 document.getElementById('questCompleteView').classList.remove('hidden');
-                document.getElementById('questFinalScoreText').innerText = I18N[currentLang].quest_complete_msg(currentQuestScore, list.length);
+                const t = I18N[currentLang] || I18N.ja;
+                document.getElementById('questFinalScoreText').innerText = t.quest_complete_msg(currentQuestScore, list.length);
                 playSfx('success');
             }
         }
@@ -1989,7 +2127,7 @@ ${lastMarkdownResponse}`;
                       "⚔️ この単元の復習クエストをセットしました！");
         }
 
-        // --- 11. Gamification & XP System ---
+        // --- 13. Gamification & XP System ---
         function awardXp(points) {
             userStats.xp += points;
             if (userStats.xp >= userStats.maxXp) {
@@ -2003,12 +2141,12 @@ ${lastMarkdownResponse}`;
             document.getElementById('xpLabel').innerText = `EXP: ${userStats.xp}/${userStats.maxXp}`;
         }
 
-        // --- 12. Multi-language Speech (TTS) & Copy ---
+        // --- 14. Multi-language Speech (TTS) & Copy ---
         function copyResult() {
             playSfx('click');
             const text = document.getElementById('resultContent').innerText;
             navigator.clipboard.writeText(text);
-            showToast(I18N[currentLang].toast_copied);
+            showToast(I18N[currentLang]?.toast_copied || "📋 Copied!");
         }
 
         function speakResult() {
@@ -2030,17 +2168,22 @@ ${lastMarkdownResponse}`;
             utterance.rate = 1.0;
             utterance.pitch = 1.05;
 
-            // Set TTS language voice accurately
-            if (currentLang === 'pt') {
-                utterance.lang = 'pt-BR';
-            } else if (currentLang === 'en') {
-                utterance.lang = 'en-US';
-            } else {
-                utterance.lang = 'ja-JP';
-            }
+            // Map language code to speech voice
+            const voiceMap = {
+                ja: 'ja-JP',
+                pt: 'pt-BR',
+                en: 'en-US',
+                es: 'es-ES',
+                ko: 'ko-KR',
+                fr: 'fr-FR',
+                de: 'de-DE',
+                it: 'it-IT',
+                zh: 'zh-CN'
+            };
+            utterance.lang = voiceMap[currentLang] || currentLang;
 
-            utterance.onstart = () => showToast(I18N[currentLang].toast_speaking);
-            utterance.onend = () => showToast(I18N[currentLang].toast_speak_done);
+            utterance.onstart = () => showToast(I18N[currentLang]?.toast_speaking || "🔊 Reading aloud...");
+            utterance.onend = () => showToast(I18N[currentLang]?.toast_speak_done || "✅ Read finished!");
             window.speechSynthesis.speak(utterance);
         }
 
@@ -2048,7 +2191,7 @@ ${lastMarkdownResponse}`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- 13. History / 学習ノート ---
+        // --- 15. History / 学習ノート ---
         function addToHistory(contentSnippet) {
             const preview = contentSnippet.slice(0, 90).replace(/[#*`_]/g, '') + "...";
             const localeStr = currentLang === 'pt' ? 'pt-BR' : currentLang === 'en' ? 'en-US' : 'ja-JP';
@@ -2056,7 +2199,8 @@ ${lastMarkdownResponse}`;
             studyHistory.unshift({ date: dateStr, preview, subject: selectedSubject });
             if (studyHistory.length > 5) studyHistory.pop();
 
-            document.getElementById('historyCountBadge').innerText = I18N[currentLang].history_count(studyHistory.length);
+            const t = I18N[currentLang] || I18N.ja;
+            document.getElementById('historyCountBadge').innerText = t.history_count(studyHistory.length);
             renderHistoryList();
         }
 
@@ -2088,7 +2232,7 @@ ${lastMarkdownResponse}`;
             list.classList.toggle('hidden');
         }
 
-        // --- 14. API Key & Demo Mode Management ---
+        // --- 16. API Key & Demo Mode Management ---
         function getSavedApiKey() {
             return localStorage.getItem('gemini_key') || document.getElementById('apiKeyInput').value.trim();
         }
@@ -2152,7 +2296,7 @@ ${lastMarkdownResponse}`;
             lucide.createIcons();
         }
 
-        // --- 15. Retro Toast Notification Helper ---
+        // --- 17. Retro Toast Notification Helper ---
         let toastTimeout = null;
         function showToast(message) {
             const toast = document.getElementById('toastNotification');
@@ -2166,8 +2310,10 @@ ${lastMarkdownResponse}`;
             }, 3000);
         }
 
-        // --- 16. Initialization on Page Load ---
+        // --- 18. Initialization on Page Load ---
         document.addEventListener('DOMContentLoaded', () => {
+            loadUserProfile();
+            loadCustomLanguages();
             applyTranslations(currentLang);
             lucide.createIcons();
             const savedKey = localStorage.getItem('gemini_key');
