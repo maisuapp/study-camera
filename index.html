@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>スタディカメラ | Study Camera • Sarah Edition</title>
+    <title>スタディカメラ | Study Camera / Demo</title>
 
     <!-- Google Fonts: Pixel Art, Retro Terminal & Japanese Sans-Serif -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -256,7 +256,7 @@
                     <h1 class="font-pixel text-[11px] text-purple-300 tracking-wider">STUDY CAMERA</h1>
                     <span class="text-[9px] font-pixel text-yellow-300 bg-yellow-900/60 px-1 py-0.5 border border-yellow-500/40 rounded">中1</span>
                 </div>
-                <p id="headerSubtitle" class="text-xs text-gray-400 font-retro tracking-widest leading-none mt-0.5">スタディカメラ • サラ専用 LO-FI EDITION</p>
+                <p id="headerSubtitle" class="text-xs text-gray-400 font-retro tracking-widest leading-none mt-0.5">スタディカメラ LO-FI EDITION</p>
             </div>
         </div>
 
@@ -327,7 +327,7 @@
                 </div>
                 <div>
                     <div class="flex items-center gap-1.5">
-                        <span id="profileName" class="font-bold text-sm text-purple-200">サラ (Sarah)</span>
+                        <span id="profileName" class="font-bold text-sm text-purple-200">MyName</span>
                         <button onclick="openProfileModal()" class="text-gray-400 hover:text-yellow-300 p-0.5 rounded transition-colors" title="プロフィール編集">
                             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                         </button>
@@ -673,7 +673,7 @@
             <!-- Username Field -->
             <div class="flex flex-col gap-1">
                 <label id="modalUsernameLabel" class="text-[10px] font-pixel text-yellow-300">ユーザーネーム:</label>
-                <input type="text" id="inputProfileName" placeholder="サラ (Sarah)" maxlength="20"
+                <input type="text" id="inputProfileName" placeholder="MyName" maxlength="20"
                     class="p-2 rounded bg-black/50 border-2 border-purple-500/50 text-white font-jp text-xs focus:outline-none focus:border-yellow-300">
             </div>
 
@@ -831,7 +831,7 @@
         let selectedAvatarEmoji = '🎨';
 
         let userProfile = {
-            name: "サラ (Sarah)",
+            name: "MyName",
             avatar: "🎨",
             badge: "中1 ART & JAZZ",
             grade: "中学校第1学年 • 14歳"
@@ -893,7 +893,7 @@
         function saveUserProfile() {
             const customEmoji = document.getElementById('inputCustomAvatar').value.trim();
             userProfile.avatar = customEmoji || selectedAvatarEmoji || '🎨';
-            userProfile.name = document.getElementById('inputProfileName').value.trim() || "サラ (Sarah)";
+            userProfile.name = document.getElementById('inputProfileName').value.trim() || "MyName";
             userProfile.badge = document.getElementById('inputProfileBadge').value.trim() || "中1 ART & JAZZ";
             userProfile.grade = document.getElementById('inputProfileGrade').value.trim() || "中学校第1学年 • 14歳";
 
@@ -966,7 +966,7 @@
                 code: 'JA',
                 flag: '🇯🇵',
                 name: '日本語',
-                app_sub: 'スタディカメラ • サラ専用 LO-FI EDITION',
+                app_sub: 'スタディカメラ LO-FI EDITION',
                 jazz_off: 'JAZZ OFF',
                 jazz_on: 'JAZZ ON',
                 status_focus: '集中モード',
@@ -1036,7 +1036,7 @@
                 code: 'PT',
                 flag: '🇧🇷',
                 name: 'Português',
-                app_sub: 'STUDY CAMERA • EDIÇÃO LO-FI DA SARAH',
+                app_sub: 'STUDY CAMERA • EDIÇÃO LO-FI',
                 jazz_off: 'JAZZ OFF',
                 jazz_on: 'JAZZ ON',
                 status_focus: 'Modo Foco',
@@ -1106,7 +1106,7 @@
                 code: 'EN',
                 flag: '🇺🇸',
                 name: 'English',
-                app_sub: "STUDY CAMERA • SARAH'S LO-FI EDITION",
+                app_sub: "STUDY CAMERA • LO-FI EDITION",
                 jazz_off: 'JAZZ OFF',
                 jazz_on: 'JAZZ ON',
                 status_focus: 'Focus Mode',
