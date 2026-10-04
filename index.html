@@ -3,27 +3,76 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Camera | スタディカメラ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>スタディカメラ | Study Camera • サラ専用エディション</title>
 
-    <!-- Fonts: Pixel Art & Japanese Anime Style -->
+    <!-- Google Fonts: Pixel Art, Retro Terminal & Japanese Sans-Serif -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Press+Start+2P&family=VT323&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Press+Start+2P&family=VT323&display=swap"
         rel="stylesheet">
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Lucide Icons -->
+    <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Marked.js for Rich Markdown Rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lofi: {
+                            bg: '#171523',
+                            surface: '#1e1b2e',
+                            box: '#251f33',
+                            card: '#2a2438',
+                            border: '#100c1c',
+                            sakura: '#c084fc',
+                            retroYellow: '#fde047',
+                            animePink: '#f472b6',
+                            emerald: '#10b981',
+                            emeraldDark: '#059669',
+                            muted: '#94a3b8'
+                        }
+                    },
+                    fontFamily: {
+                        pixel: ['"Press Start 2P"', 'cursive'],
+                        retro: ['"VT323"', 'monospace'],
+                        jp: ['"Noto Sans JP"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
+        /* Base Styles & Typography */
+        :root {
+            --bg-color: #171523;
+            --surface-color: #1e1b2e;
+            --card-color: #251f33;
+            --sakura: #c084fc;
+            --retro-yellow: #fde047;
+            --anime-pink: #f472b6;
+            --emerald: #10b981;
+        }
+
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: #1e1b2e;
-            color: #e2e8f0;
+            background-color: #171523;
+            color: #f1f5f9;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(192, 132, 252, 0.08) 0%, transparent 70%),
+                linear-gradient(rgba(23, 21, 35, 0.96), rgba(23, 21, 35, 0.96)),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.25) 2px, rgba(0, 0, 0, 0.25) 4px);
+            background-size: 100% 100%, 100% 100%, 100% 4px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .font-pixel {
@@ -34,215 +83,774 @@
             font-family: 'VT323', monospace;
         }
 
-        .pixel-border {
-            box-shadow:
-                -4px 0 0 0 #000,
-                4px 0 0 0 #000,
-                0 -4px 0 0 #000,
-                0 4px 0 0 #000;
+        .font-jp {
+            font-family: 'Noto Sans JP', sans-serif;
         }
 
+        /* Pixel Art Boxes & Chunky Block Shadows */
         .pixel-box {
-            border: 4px solid #2d2640;
-            background-color: #2a2438;
-            box-shadow: 4px 4px 0px #120e1d;
+            background-color: #251f33;
+            border: 3px solid #100c1c;
+            box-shadow: 4px 4px 0px #090710;
+        }
+
+        .pixel-box-hover {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .pixel-box-hover:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 5px 5px 0px #090710;
         }
 
         .pixel-btn {
-            border: 3px solid #000;
-            box-shadow: 3px 3px 0px #000;
-            transition: all 0.1s ease;
+            border: 3px solid #0a0812;
+            box-shadow: 3px 3px 0px #0a0812;
+            transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            user-select: none;
         }
 
-        .pixel-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #000;
+        .pixel-btn:active, .pixel-btn-active {
+            transform: translate(2px, 2px) !important;
+            box-shadow: 1px 1px 0px #0a0812 !important;
+        }
+
+        /* Primary Action Pulsing Glow (Thumb Zone CTA) */
+        .btn-solve-glow {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-solve-glow::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                60deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.18) 50%,
+                transparent 70%
+            );
+            transform: rotate(30deg);
+            animation: shine 4s infinite ease-in-out;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            20%, 100% { transform: translateX(100%) rotate(30deg); }
+        }
+
+        /* Animated Lo-Fi Equalizer Wave */
+        .eq-bar {
+            display: inline-block;
+            width: 3px;
+            background-color: #c084fc;
+            border-radius: 1px;
+            animation: eqDance 1.2s infinite ease-in-out;
+        }
+        .eq-bar:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+        .eq-bar:nth-child(2) { height: 14px; animation-delay: 0.3s; }
+        .eq-bar:nth-child(3) { height: 9px; animation-delay: 0.2s; }
+        .eq-bar:nth-child(4) { height: 16px; animation-delay: 0.4s; }
+        .eq-bar:nth-child(5) { height: 8px; animation-delay: 0.15s; }
+
+        .eq-paused .eq-bar {
+            animation: none !important;
+            height: 4px !important;
+            background-color: #64748b;
+        }
+
+        @keyframes eqDance {
+            0%, 100% { transform: scaleY(0.4); }
+            50% { transform: scaleY(1.3); }
+        }
+
+        /* Pixel Progress Bar */
+        .pixel-progress-bg {
+            background-color: #171523;
+            border: 2px solid #100c1c;
+            box-shadow: inset 2px 2px 0px #090710;
+        }
+
+        /* Markdown Styling inside Resolution Output */
+        .markdown-output h1, .markdown-output h2, .markdown-output h3 {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 700;
+            color: #fde047;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .markdown-output h1 { font-size: 1.15rem; border-bottom: 2px solid rgba(192, 132, 252, 0.35); padding-bottom: 0.35rem; }
+        .markdown-output h2 { font-size: 1.05rem; color: #c084fc; }
+        .markdown-output h3 { font-size: 0.95rem; color: #f472b6; }
+        .markdown-output p {
+            margin-bottom: 0.65rem;
+            line-height: 1.7;
+        }
+        .markdown-output ul, .markdown-output ol {
+            margin-left: 1.25rem;
+            margin-bottom: 0.75rem;
+            list-style-type: square;
+        }
+        .markdown-output li {
+            margin-bottom: 0.4rem;
+        }
+        .markdown-output strong {
+            color: #fde047;
+            font-weight: 700;
+        }
+        .markdown-output blockquote {
+            border-left: 4px solid #c084fc;
+            background: rgba(192, 132, 252, 0.08);
+            padding: 0.6rem 0.85rem;
+            margin: 0.75rem 0;
+            border-radius: 0 4px 4px 0;
+            font-style: normal;
+        }
+        .markdown-output code {
+            font-family: 'VT323', monospace;
+            background: #171523;
+            color: #38bdf8;
+            padding: 0.15rem 0.4rem;
+            border: 1px solid #334155;
+            font-size: 1.15em;
+            border-radius: 3px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #171523;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2f2842;
+            border: 1px solid #171523;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c084fc;
         }
     </style>
 </head>
 
-<body class="min-h-screen pb-12 flex flex-col items-center">
+<body class="min-h-screen flex flex-col items-center select-none pb-28">
 
-    <!-- Header / Top Bar (Jazz Lo-Fi + Pixel Aesthetic) -->
-    <header
-        class="w-full max-w-md bg(#352f44) p-4 border-b-4 border-black mb-6 flex justify-between items-center bg-[#2a2438]">
-        <div class="flex items-center gap-2">
-            <i data-lucide="camera" class="w-6 h-6 text-purple-400"></i>
+    <!-- Top Header: Lo-Fi Jazz & Indie Aesthetic Bar -->
+    <header class="w-full max-w-lg bg-[#251f33] border-b-4 border-[#0a0812] px-4 py-3 sticky top-0 z-30 flex justify-between items-center shadow-[0_4px_0_#0a0812]">
+        <!-- Brand & Mascot Logo -->
+        <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded bg-purple-700/80 border-2 border-black flex items-center justify-center text-lg shadow-[2px_2px_0_#000]">
+                📸
+            </div>
             <div>
-                <h1 class="font-pixel text-xs text-purple-300 tracking-wider">STUDY CAMERA</h1>
-                <p class="text-[10px] text-gray-400 font-retro tracking-widest">スタディカメラ • 中1 ART EDITION</p>
+                <div class="flex items-center gap-1.5">
+                    <h1 class="font-pixel text-[11px] text-purple-300 tracking-wider">STUDY CAMERA</h1>
+                    <span class="text-[9px] font-pixel text-yellow-300 bg-yellow-900/60 px-1.5 py-0.5 border border-yellow-500/40 rounded">中1</span>
+                </div>
+                <p class="text-xs text-gray-400 font-retro tracking-widest leading-none mt-0.5">スタディカメラ • サラ専用 LO-FI EDITION</p>
             </div>
         </div>
-        <div
-            class="px-2 py-1 bg-purple-900/60 border border-purple-500/40 rounded text-[10px] text-purple-200 flex items-center gap-1">
-            <i data-lucide="music" class="w-3 h-3 text-pink-400"></i>
-            <span>Lo-Fi Jazz</span>
+
+        <!-- Controls: Lo-Fi Jazz Ambient + Audio SFX + Settings -->
+        <div class="flex items-center gap-2">
+            <!-- Lo-Fi Jazz Synthesizer Button -->
+            <button id="lofiAudioBtn" onclick="toggleLofiAudio()" title="ローファイ・ジャズBGM切り替え"
+                class="pixel-btn bg-[#1e1b2e] hover:bg-[#2c263d] px-2.5 py-1.5 rounded flex items-center gap-1.5 text-xs text-purple-300">
+                <div id="eqVisualizer" class="flex items-end gap-[2px] h-3.5 eq-paused">
+                    <span class="eq-bar"></span>
+                    <span class="eq-bar"></span>
+                    <span class="eq-bar"></span>
+                    <span class="eq-bar"></span>
+                    <span class="eq-bar"></span>
+                </div>
+                <span id="lofiStatusText" class="font-retro text-sm text-purple-200">JAZZ OFF</span>
+            </button>
+
+            <!-- SFX Button -->
+            <button id="sfxToggleBtn" onclick="toggleSfx()" title="効果音切り替え"
+                class="pixel-btn bg-[#1e1b2e] hover:bg-[#2c263d] p-1.5 rounded text-gray-300 text-xs">
+                <i id="sfxIcon" data-lucide="volume-2" class="w-4 h-4 text-pink-400"></i>
+            </button>
+
+            <!-- API Key Settings Button -->
+            <button onclick="openApiKeyModal()" title="API設定"
+                class="pixel-btn bg-purple-900/80 hover:bg-purple-800 p-1.5 rounded text-yellow-300 text-xs relative">
+                <i data-lucide="key" class="w-4 h-4"></i>
+                <span id="keyStatusBadge" class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-black"></span>
+            </button>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="w-full max-w-md px-4 flex-1 flex flex-col gap-6">
+    <!-- Main Container (Mobile Ergonomic Center) -->
+    <main class="w-full max-w-lg px-4 pt-4 flex-1 flex flex-col gap-4">
 
-        <!-- Profile & Age Tag -->
-        <div class="pixel-box p-3 rounded flex justify-between items-center text-xs">
-            <div class="flex items-center gap-2">
-                <div
-                    class="w-8 h-8 rounded bg-purple-600 border-2 border-black flex items-center justify-center font-pixel text-yellow-300 text-xs">
-                    🎨
+        <!-- Sarah's Profile & Gamification Stats Banner -->
+        <section class="pixel-box p-3 rounded-lg flex items-center justify-between gap-3 bg-[#231d30]">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-black flex items-center justify-center text-xl shadow-[2px_2px_0_#000]">
+                        🎨
+                    </div>
+                    <span class="absolute -bottom-1 -right-1 bg-yellow-400 text-black font-pixel text-[8px] px-1 border border-black rounded">LV14</span>
                 </div>
                 <div>
-                    <p class="font-bold text-purple-200">Sarah (サラ)</p>
-                    <p class="text-[10px] text-gray-400"> Target: 中学校1年生 (14歳)</p>
-                </div>
-            </div>
-            <span
-                class="px-2 py-1 bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-[10px] rounded font-pixel">
-                LV.14
-            </span>
-        </div>
-
-        <!-- API Key Input Section (Collapsible / Simple) -->
-        <details class="pixel-box p-3 rounded text-xs bg-[#241e30]">
-            <summary class="cursor-pointer text-purple-300 font-bold flex items-center gap-2">
-                <i data-lucide="key" class="w-4 h-4"></i>
-                <span>Chave de API do Gemini (Clique para configurar)</span>
-            </summary>
-            <div class="mt-3 flex flex-col gap-2">
-                <input type="password" id="apiKeyInput" placeholder="Cole sua GEMINI_API_KEY aqui"
-                    class="p-2 rounded bg-black/40 border border-purple-500/30 text-white text-xs w-full focus:outline-none focus:border-purple-400">
-                <p class="text-[10px] text-gray-400">A chave é salva apenas no seu navegador localmente.</p>
-            </div>
-        </details>
-
-        <!-- Camera / Upload Section (Mokuhyou) -->
-        <section class="pixel-box p-4 rounded text-center flex flex-col gap-4">
-            <div class="flex justify-between items-center border-b border-purple-800/40 pb-2">
-                <span class="font-pixel text-[10px] text-purple-300">📸 CAPTURE A QUESTÃO</span>
-                <span class="text-xs text-gray-400 font-retro">TARGET: LIVROS & PROVAS</span>
-            </div>
-
-            <!-- Preview Box -->
-            <div id="imagePreviewContainer"
-                class="w-full h-48 bg-black/50 border-2 border-dashed border-purple-500/40 rounded flex flex-col items-center justify-center relative overflow-hidden">
-                <img id="imagePreview" class="hidden w-full h-full object-contain">
-                <div id="previewPlaceholder" class="flex flex-col items-center gap-2 text-gray-400">
-                    <i data-lucide="image-plus" class="w-10 h-10 text-purple-400/60"></i>
-                    <p class="text-xs">Tire foto do livro ou selecione da galeria</p>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-sm text-purple-200">サラ (Sarah)</span>
+                        <span class="text-[10px] text-pink-300 font-retro px-1.5 py-0.2 bg-pink-950/60 border border-pink-500/30 rounded">中1 ART & JAZZ</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
+                        <div class="w-28 pixel-progress-bg h-2 rounded-full overflow-hidden">
+                            <div id="xpProgressBar" class="h-full bg-gradient-to-r from-purple-500 to-yellow-400 w-3/4 transition-all duration-500"></div>
+                        </div>
+                        <span id="xpLabel" class="text-xs font-retro text-yellow-300">EXP: 750/1000</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Buttons -->
-            <div class="flex gap-2">
-                <label for="cameraInput"
-                    class="flex-1 pixel-btn bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-3 rounded text-xs flex items-center justify-center gap-2 cursor-pointer">
-                    <i data-lucide="camera" class="w-4 h-4"></i>
-                    <span>CÂMERA</span>
-                    <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
-                </label>
-                <label for="fileInput"
-                    class="flex-1 pixel-btn bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-2.5 px-3 rounded text-xs flex items-center justify-center gap-2 cursor-pointer">
-                    <i data-lucide="folder" class="w-4 h-4"></i>
-                    <span>GALERIA</span>
-                    <input type="file" id="fileInput" accept="image/*" class="hidden">
-                </label>
+            <!-- Focus Status & Middle School Badge -->
+            <div class="flex flex-col items-end">
+                <span class="font-pixel text-[9px] text-emerald-400 flex items-center gap-1">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> 集中モード
+                </span>
+                <span class="text-[11px] font-retro text-gray-400 tracking-wider mt-0.5">中学校第1学年 • 14歳</span>
             </div>
         </section>
 
-        <!-- Mode Selector & Resolution Action -->
-        <section class="pixel-box p-4 rounded flex flex-col gap-3">
-            <div class="flex justify-between items-center">
-                <span class="font-pixel text-[10px] text-purple-300">📜 MODO DE RESPOSTA</span>
+        <!-- Hidden inputs for Camera and File upload -->
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
+        <input type="file" id="fileInput" accept="image/*" class="hidden">
+
+        <!-- Camera & Upload Section (Mokuhyou / Question Capture) -->
+        <section class="pixel-box p-4 rounded-lg flex flex-col gap-3">
+            <div class="flex justify-between items-center border-b-2 border-purple-900/40 pb-2">
+                <div class="flex items-center gap-1.5">
+                    <i data-lucide="sparkle" class="w-3.5 h-3.5 text-yellow-400"></i>
+                    <span class="font-pixel text-[10px] text-purple-300">問題を撮影・選択</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="loadSampleQuestion()" class="text-[11px] font-jp text-pink-300 hover:text-pink-200 underline flex items-center gap-1 font-bold">
+                        <span>✨ お試し問題（中1 数学）</span>
+                    </button>
+                </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
+            <!-- Image Preview Box (Interactive Drag/Drop & Click to Upload) -->
+            <div id="imagePreviewContainer" onclick="triggerGalleryUpload()"
+                class="w-full h-52 bg-[#171523] border-2 border-dashed border-purple-500/40 hover:border-purple-400 rounded-lg flex flex-col items-center justify-center relative overflow-hidden cursor-pointer transition-all duration-200 group">
+                
+                <img id="imagePreview" alt="問題のプレビュー画像" class="hidden w-full h-full object-contain z-10 p-1">
+                
+                <!-- Placeholder Screen -->
+                <div id="previewPlaceholder" class="flex flex-col items-center gap-2 text-center p-4">
+                    <div class="w-12 h-12 rounded-full bg-purple-950/70 border border-purple-500/40 flex items-center justify-center text-purple-300 group-hover:scale-105 transition-transform">
+                        <i data-lucide="camera" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-purple-200">ここをタップして写真を選択、または下のボタンから撮影</p>
+                        <p class="text-[11px] text-gray-400 font-jp tracking-wide mt-1">教科書 • 定期テスト • ワークブック • 宿題プリント</p>
+                    </div>
+                </div>
+
+                <!-- Overlay Controls when Image is Active -->
+                <div id="imageControlsOverlay" class="hidden absolute top-2 right-2 z-20 flex gap-1.5">
+                    <button onclick="event.stopPropagation(); clearImage()" title="画像を削除"
+                        class="pixel-btn bg-red-600/90 hover:bg-red-500 p-1.5 rounded text-white text-xs">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Subject Quick Tag Selector (Optional Context for Gemini) -->
+            <div class="flex items-center justify-between gap-1 overflow-x-auto py-1 scrollbar-none text-[11px] font-retro text-gray-300">
+                <span class="text-gray-400 font-pixel text-[8px] mr-1">科目:</span>
+                <div class="flex gap-1.5">
+                    <button onclick="setSubject('auto')" class="subject-tag px-2 py-0.5 rounded border border-purple-500/60 bg-purple-900/60 text-yellow-300 font-jp text-[11px]" data-subject="auto">⚡ 自動判定</button>
+                    <button onclick="setSubject('math')" class="subject-tag px-2 py-0.5 rounded border border-slate-700 bg-slate-800/80 text-gray-300 hover:text-white font-jp text-[11px]" data-subject="math">🔢 数学</button>
+                    <button onclick="setSubject('science')" class="subject-tag px-2 py-0.5 rounded border border-slate-700 bg-slate-800/80 text-gray-300 hover:text-white font-jp text-[11px]" data-subject="science">🔬 理科</button>
+                    <button onclick="setSubject('japanese')" class="subject-tag px-2 py-0.5 rounded border border-slate-700 bg-slate-800/80 text-gray-300 hover:text-white font-jp text-[11px]" data-subject="japanese">📖 国語</button>
+                    <button onclick="setSubject('english')" class="subject-tag px-2 py-0.5 rounded border border-slate-700 bg-slate-800/80 text-gray-300 hover:text-white font-jp text-[11px]" data-subject="english">🇬🇧 英語</button>
+                    <button onclick="setSubject('social')" class="subject-tag px-2 py-0.5 rounded border border-slate-700 bg-slate-800/80 text-gray-300 hover:text-white font-jp text-[11px]" data-subject="social">🌍 社会</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mode Selector: スピード解答 vs でんせつ解説 -->
+        <section class="pixel-box p-3.5 rounded-lg flex flex-col gap-2.5">
+            <div class="flex justify-between items-center">
+                <span class="font-pixel text-[10px] text-purple-300 flex items-center gap-1.5">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-pink-400"></i> 解説モード選択
+                </span>
+                <span id="modeDescriptionTag" class="text-[11px] font-jp text-yellow-300 font-bold">スピード解答（要点）</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+                <!-- スピード解答 Mode Button -->
                 <button id="modeStandard" onclick="setMode('standard')"
-                    class="pixel-btn bg-purple-900 border-purple-400 text-white p-2 rounded text-xs text-left flex flex-col gap-1">
-                    <span class="font-bold flex items-center gap-1 text-yellow-300">
-                        <i data-lucide="zap" class="w-3 h-3"></i> Direta
-                    </span>
-                    <span class="text-[10px] text-gray-300">Resposta rápida e objetiva</span>
+                    class="pixel-btn bg-purple-900/90 border-2 border-purple-400 text-white p-2.5 rounded-md text-left flex flex-col gap-1 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-xs flex items-center gap-1 text-yellow-300 font-jp">
+                            <i data-lucide="zap" class="w-3.5 h-3.5"></i> スピード解答
+                        </span>
+                        <span id="badgeStd" class="text-[9px] font-pixel text-yellow-400 bg-yellow-950/80 px-1 py-0.5 rounded">ON</span>
+                    </div>
+                    <span class="text-[11px] text-purple-200 font-jp leading-tight">3ステップで要点と答えを素早く確認！宿題チェックに。</span>
                 </button>
+
+                <!-- でんせつ解説 Mode Button -->
                 <button id="modeDetailed" onclick="setMode('detailed')"
-                    class="pixel-btn bg-slate-800 border-gray-600 text-gray-300 p-2 rounded text-xs text-left flex flex-col gap-1">
-                    <span class="font-bold flex items-center gap-1 text-pink-300">
-                        <i data-lucide="book-open" class="w-3 h-3"></i> Detalhada
-                    </span>
-                    <span class="text-[10px] text-gray-400">Passo a passo (Densetsu)</span>
+                    class="pixel-btn bg-[#1e1b2e] border-2 border-gray-700 text-gray-400 p-2.5 rounded-md text-left flex flex-col gap-1 transition-all opacity-80 hover:opacity-100">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-xs flex items-center gap-1 text-pink-300 font-jp">
+                            <i data-lucide="book-open" class="w-3.5 h-3.5"></i> でんせつ解説
+                        </span>
+                        <span id="badgeDet" class="text-[9px] font-pixel text-gray-400 bg-gray-900 px-1 py-0.5 rounded hidden">ON</span>
+                    </div>
+                    <span class="text-[11px] text-gray-300 font-jp leading-tight">途中式・考え方のロジック・テスト重要単語まで丁寧に図解！</span>
                 </button>
-            </div>
-
-            <button id="btnAnalyze" onclick="analyzeImage()"
-                class="pixel-btn bg-emerald-600 hover:bg-emerald-500 text-white font-pixel text-xs py-3 rounded mt-2 flex items-center justify-center gap-2">
-                <i data-lucide="sparkles" class="w-4 h-4"></i>
-                <span>RESOLVER QUESTÃO</span>
-            </button>
-        </section>
-
-        <!-- Results Display -->
-        <section id="resultSection" class="hidden pixel-box p-4 rounded flex flex-col gap-3 border-emerald-500/40">
-            <div class="flex justify-between items-center border-b border-purple-800/40 pb-2">
-                <span class="font-pixel text-[10px] text-emerald-300">✨ RESOLUÇÃO (中1 ADAPTED)</span>
-                <button onclick="copyResult()" class="text-xs text-purple-300 hover:text-white flex items-center gap-1">
-                    <i data-lucide="copy" class="w-3 h-3"></i> Copiar
-                </button>
-            </div>
-
-            <div id="resultContent" class="text-xs leading-relaxed space-y-3 font-sans text-gray-200">
-                <!-- Content inserted dynamically -->
             </div>
         </section>
 
-        <!-- Quiz / Quest Mode Section -->
-        <section class="pixel-box p-4 rounded flex flex-col gap-3 bg-[#221c2e]">
-            <div class="flex justify-between items-center">
-                <span class="font-pixel text-[10px] text-pink-300">⚔️ QUEST DE FIXAÇÃO</span>
-                <span class="text-[10px] text-gray-400">MODO TESTE</span>
+        <!-- Loading State Box (Retro 8-bit Skeleton) -->
+        <section id="loadingSection" class="hidden pixel-box p-4 rounded-lg flex flex-col items-center justify-center gap-3 text-center border-purple-500/50 py-6">
+            <div class="w-10 h-10 border-4 border-purple-500 border-t-yellow-300 rounded-full animate-spin"></div>
+            <div>
+                <p id="loadingMessage" class="font-pixel text-xs text-yellow-300">AIチューターが問題を解析中...</p>
+                <p class="text-xs text-purple-300 font-jp tracking-wider mt-1">日本語の手書き文字・図・数式を読み取っています</p>
             </div>
-            <p class="text-xs text-gray-300">Gere um mini-simulado de 3 perguntas com base no seu histórico de estudos.
+            <div class="w-48 pixel-progress-bg h-2 rounded-full overflow-hidden mt-1">
+                <div class="h-full bg-emerald-400 w-full animate-pulse"></div>
+            </div>
+        </section>
+
+        <!-- Resolution Result Section (中1 Adapted AI Output) -->
+        <section id="resultSection" class="hidden pixel-box p-4 rounded-lg flex flex-col gap-3 border-emerald-500/60 bg-[#251f33]">
+            <div class="flex justify-between items-center border-b-2 border-purple-900/40 pb-2.5">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span class="font-pixel text-[10px] text-emerald-300">✨ 解答と解説 (中1専用)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <!-- Text-to-Speech Button -->
+                    <button onclick="speakResult()" id="btnSpeak" title="音声で読み上げる"
+                        class="text-xs text-purple-300 hover:text-white px-2 py-1 bg-purple-950/60 border border-purple-500/30 rounded flex items-center gap-1 font-jp">
+                        <i data-lucide="volume-2" class="w-3.5 h-3.5 text-yellow-300"></i> 音声読上げ
+                    </button>
+                    <!-- Copy Button -->
+                    <button onclick="copyResult()" title="解説をコピー"
+                        class="text-xs text-purple-300 hover:text-white px-2 py-1 bg-purple-950/60 border border-purple-500/30 rounded flex items-center gap-1 font-jp">
+                        <i data-lucide="copy" class="w-3.5 h-3.5 text-pink-300"></i> コピー
+                    </button>
+                </div>
+            </div>
+
+            <!-- Subject Badge & Mode indicator on result -->
+            <div class="flex items-center gap-2 text-[10px] font-jp">
+                <span id="resultSubjectBadge" class="bg-purple-900/80 text-purple-200 px-2 py-0.5 rounded border border-purple-500/40">科目: 数学</span>
+                <span id="resultModeBadge" class="bg-yellow-950/60 text-yellow-300 px-2 py-0.5 rounded border border-yellow-500/30">モード: スピード解答</span>
+            </div>
+
+            <!-- Dynamic Markdown Content Container -->
+            <div id="resultContent" class="markdown-output text-xs leading-relaxed font-jp text-gray-100">
+                <!-- Injected dynamically via marked.js -->
+            </div>
+
+            <!-- Result Actions -->
+            <div class="pt-2 border-t border-purple-900/40 flex justify-between items-center">
+                <button onclick="generateQuestFromCurrent()"
+                    class="pixel-btn bg-pink-700 hover:bg-pink-600 text-white font-jp font-bold text-[10px] py-2 px-3 rounded flex items-center gap-1.5">
+                    <i data-lucide="swords" class="w-3.5 h-3.5"></i>
+                    <span>この単元の復習クエストを作る (+50 EXP)</span>
+                </button>
+                <button onclick="scrollToTop()" class="text-xs font-jp text-gray-400 hover:text-white flex items-center gap-1">
+                    <i data-lucide="arrow-up" class="w-3 h-3"></i> ページ上部へ
+                </button>
+            </div>
+        </section>
+
+        <!-- Interactive Quest / Quiz Mode Section (復習クエスト) -->
+        <section id="questSection" class="pixel-box p-4 rounded-lg flex flex-col gap-3 bg-[#221c2e] border-pink-500/40">
+            <div class="flex justify-between items-center border-b border-pink-900/40 pb-2">
+                <div class="flex items-center gap-1.5">
+                    <i data-lucide="sword" class="w-4 h-4 text-pink-400"></i>
+                    <span class="font-pixel text-[10px] text-pink-300">復習クエスト</span>
+                </div>
+                <span id="questCounter" class="text-xs text-yellow-300 font-jp">3問ミニテスト • 中1 定番問題</span>
+            </div>
+
+            <p class="text-xs text-gray-300 font-jp leading-relaxed">
+                テスト頻出の重要問題を解いてEXPをゲット！間違えても分かりやすいヒントでしっかり身につきます。
             </p>
-            <button onclick="generateQuest()"
-                class="pixel-btn bg-pink-700 hover:bg-pink-600 text-white font-bold py-2 px-3 rounded text-xs flex items-center justify-center gap-2">
-                <i data-lucide="swords" class="w-4 h-4"></i>
-                <span>GERAR QUEST DE ESTUDO</span>
-            </button>
+
+            <!-- Quest Generator CTA (When idle) -->
+            <div id="questIdleView" class="flex flex-col gap-2">
+                <button onclick="startInteractiveQuest()"
+                    class="pixel-btn bg-pink-600 hover:bg-pink-500 text-white font-pixel text-[10px] py-3 px-4 rounded-md flex items-center justify-center gap-2">
+                    <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+                    <span>復習クエストを開始する (+150 EXP)</span>
+                </button>
+            </div>
+
+            <!-- Active Interactive Quiz Container -->
+            <div id="questActiveView" class="hidden flex flex-col gap-3">
+                <!-- Progress & Score -->
+                <div class="flex justify-between items-center text-xs font-jp text-gray-300 bg-black/30 p-2 rounded border border-purple-900/40">
+                    <span id="questQuestionNumber" class="text-yellow-300 font-pixel text-[9px]">第 1 問 / 全 3 問</span>
+                    <span id="questScoreTracker" class="text-emerald-400 font-bold">正解数: 0 / 3</span>
+                </div>
+
+                <!-- Question Prompt -->
+                <div class="bg-[#1a1626] p-3 rounded border border-purple-500/30">
+                    <span id="questSubjectBadge" class="text-[9px] font-pixel text-pink-300 bg-pink-950/70 px-1.5 py-0.5 rounded border border-pink-500/40">中1 数学</span>
+                    <p id="questQuestionText" class="mt-2 text-xs font-bold text-gray-100 font-jp leading-relaxed">
+                        問題を読み込んでいます...
+                    </p>
+                </div>
+
+                <!-- 4 Interactive Option Buttons -->
+                <div id="questOptionsContainer" class="flex flex-col gap-2">
+                    <!-- Injected by JavaScript -->
+                </div>
+
+                <!-- Feedback & Explanation Card -->
+                <div id="questFeedbackCard" class="hidden p-3 rounded border text-xs font-jp flex flex-col gap-2">
+                    <div id="questFeedbackTitle" class="font-bold flex items-center gap-1.5"></div>
+                    <p id="questFeedbackText" class="text-gray-200 leading-relaxed"></p>
+                    <button id="questNextBtn" onclick="nextQuestQuestion()"
+                        class="pixel-btn bg-purple-700 hover:bg-purple-600 text-white font-jp font-bold text-[11px] py-2 px-3 rounded mt-1 self-end flex items-center gap-1">
+                        <span>次の問題へ</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quest Completed Victory Screen -->
+            <div id="questCompleteView" class="hidden flex flex-col items-center gap-3 p-4 text-center bg-black/40 rounded border border-yellow-500/40">
+                <div class="text-3xl animate-bounce">🏆</div>
+                <h3 class="font-pixel text-xs text-yellow-300">クエストクリア！</h3>
+                <p id="questFinalScoreText" class="text-sm font-jp text-gray-200">3問中 3問 正解しました！すばらしい！</p>
+                <div class="flex items-center gap-1 text-emerald-400 font-pixel text-[10px]">
+                    <span>+150 EXP GET! 🌟</span>
+                </div>
+                <div class="flex gap-2 mt-2 w-full">
+                    <button onclick="startInteractiveQuest()"
+                        class="flex-1 pixel-btn bg-purple-700 hover:bg-purple-600 text-white font-jp font-bold text-[11px] py-2 px-2 rounded">
+                        もう一度挑戦
+                    </button>
+                    <button onclick="resetQuestView()"
+                        class="flex-1 pixel-btn bg-slate-800 hover:bg-slate-700 text-gray-300 font-jp font-bold text-[11px] py-2 px-2 rounded">
+                        閉じる
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Caderno de Estudos (学習ノート / Recent History) -->
+        <section class="pixel-box p-3 rounded-lg flex flex-col gap-2 bg-[#1f1a2b]">
+            <div class="flex justify-between items-center cursor-pointer" onclick="toggleHistoryDrawer()">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="bookmark" class="w-3.5 h-3.5 text-purple-400"></i>
+                    <span class="font-pixel text-[9px] text-purple-200">📚 さいきんの学習ノート</span>
+                </div>
+                <span id="historyCountBadge" class="text-xs font-jp text-yellow-300">0 件保存</span>
+            </div>
+            <div id="historyList" class="hidden flex flex-col gap-1.5 pt-2 border-t border-purple-900/30 text-xs">
+                <p id="historyEmptyMsg" class="text-gray-400 font-jp text-center py-2">まだ保存された問題はありません。写真を撮って解決してみよう！</p>
+            </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="mt-8 text-center text-[10px] text-gray-500 font-retro tracking-widest">
-        STUDY CAMERA • DESENVOLVIDO PARA SARAH • 中学校1年生
-    </footer>
+    <!-- Ergonomic Bottom Action Bar (Thumb Zone - Optimized for Mobile Smartphones) -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#1e1b2e]/95 backdrop-blur-md border-t-4 border-[#0a0812] px-3 py-2.5 pb-[calc(0.65rem+env(safe-area-inset-bottom))] shadow-[0_-4px_0_#0a0812]">
+        <div class="max-w-lg mx-auto flex items-center justify-between gap-2">
+            
+            <!-- 1. Camera Trigger Button -->
+            <button onclick="triggerCameraCapture()"
+                class="flex-1 pixel-btn bg-purple-700 hover:bg-purple-600 text-white font-bold py-2.5 px-2 rounded-lg text-xs flex flex-col items-center justify-center gap-1">
+                <i data-lucide="camera" class="w-5 h-5 text-yellow-300"></i>
+                <span class="font-jp text-[11px] tracking-tight font-bold">カメラ</span>
+            </button>
 
-    <!-- Scripts -->
+            <!-- 2. Gallery Trigger Button -->
+            <button onclick="triggerGalleryUpload()"
+                class="flex-1 pixel-btn bg-indigo-800 hover:bg-indigo-700 text-white font-bold py-2.5 px-2 rounded-lg text-xs flex flex-col items-center justify-center gap-1">
+                <i data-lucide="image" class="w-5 h-5 text-pink-300"></i>
+                <span class="font-jp text-[11px] tracking-tight font-bold">写真選択</span>
+            </button>
+
+            <!-- 3. Primary Solve Action Button (Central Prominent Thumb Target) -->
+            <button id="btnAnalyze" onclick="analyzeImage()"
+                class="flex-[1.6] pixel-btn bg-emerald-600 hover:bg-emerald-500 text-white font-pixel text-[10px] py-3 px-2 rounded-lg flex items-center justify-center gap-2 btn-solve-glow border-emerald-950">
+                <i data-lucide="sparkles" class="w-4 h-4 text-yellow-300 animate-spin-slow"></i>
+                <span id="btnAnalyzeText">かいけつ！</span>
+            </button>
+
+            <!-- 4. Quick Quest Mode Trigger Button -->
+            <button onclick="jumpToQuestMode()"
+                class="flex-1 pixel-btn bg-pink-700 hover:bg-pink-600 text-white font-bold py-2.5 px-2 rounded-lg text-xs flex flex-col items-center justify-center gap-1">
+                <i data-lucide="swords" class="w-5 h-5 text-yellow-200"></i>
+                <span class="font-jp text-[11px] tracking-tight font-bold">クエスト</span>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- Modal: API Key Configuration -->
+    <div id="apiKeyModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="pixel-box p-5 rounded-lg max-w-sm w-full flex flex-col gap-4 bg-[#251f33] border-purple-500">
+            <div class="flex justify-between items-center border-b border-purple-900/40 pb-2">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="key" class="w-4 h-4 text-yellow-300"></i>
+                    <h3 class="font-pixel text-xs text-purple-300">GEMINI API 設定</h3>
+                </div>
+                <button onclick="closeApiKeyModal()" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-gray-300 font-jp leading-relaxed">
+                Google Gemini APIキーを入力すると、日本の教科書やテスト問題の画像認識・自動解説が有効になります。
+            </p>
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] font-pixel text-purple-300">APIキー (GEMINI_API_KEY):</label>
+                <div class="relative">
+                    <input type="password" id="apiKeyInput" placeholder="AIzaSy..."
+                        class="w-full p-2.5 rounded bg-black/50 border-2 border-purple-500/50 text-white text-xs focus:outline-none focus:border-yellow-300 font-mono pr-8">
+                    <button onclick="togglePasswordVisibility()" class="absolute right-2 top-2.5 text-gray-400 hover:text-white">
+                        <i id="eyeIcon" data-lucide="eye" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <span class="text-[10px] text-gray-400 font-jp">※ キーはお使いのスマートフォンの端末内(localStorage)にのみ安全に保存されます。</span>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button onclick="saveApiKey()"
+                    class="flex-1 pixel-btn bg-emerald-600 hover:bg-emerald-500 text-white font-jp font-bold text-[11px] py-2 px-3 rounded">
+                    保存する
+                </button>
+                <button onclick="enableDemoMode()"
+                    class="flex-1 pixel-btn bg-purple-900 hover:bg-purple-800 text-yellow-300 font-jp font-bold text-[11px] py-2 px-3 rounded">
+                    お試しモード
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Retro Toast Notification Element -->
+    <div id="toastNotification" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 hidden pixel-box px-4 py-2 rounded bg-purple-900 text-white text-xs font-jp tracking-wider border-yellow-400 shadow-lg flex items-center gap-2">
+        <span id="toastIcon">✨</span>
+        <span id="toastMessage">メッセージ</span>
+    </div>
+
+    <!-- Application Script (Logic, Web Audio API Synth, Gemini Multimodal, Quest Engine) -->
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-
-        let selectedMode = 'standard';
+        // --- 1. Global Application State ---
+        let selectedMode = 'standard'; // 'standard' (スピード解答) or 'detailed' (でんせつ解説)
+        let selectedSubject = 'auto';
         let base64Image = null;
+        let isAudioPlaying = false;
+        let sfxEnabled = true;
+        let isDemoMode = false;
+        let studyHistory = [];
+        let userStats = { level: 14, xp: 750, maxXp: 1000, solvedCount: 0 };
 
-        // Load saved API Key if available
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedKey = localStorage.getItem('gemini_key');
-            if (savedKey) {
-                document.getElementById('apiKeyInput').value = savedKey;
+        // --- 2. Web Audio API: Cozy Lo-Fi Jazz Synthesizer & Retro SFX ---
+        let audioCtx = null;
+        let lofiInterval = null;
+        let masterGain = null;
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContextClass();
+                masterGain = audioCtx.createGain();
+                masterGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                masterGain.connect(audioCtx.destination);
             }
-        });
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
 
-        document.getElementById('apiKeyInput').addEventListener('change', (e) => {
-            localStorage.setItem('gemini_key', e.target.value.trim());
-        });
+        // Plays a warm, filtered 7th/9th jazz chord progression (Lo-Fi Rhode-like tone)
+        function playJazzChord(frequencies, duration = 3.2) {
+            if (!audioCtx || !isAudioPlaying) return;
+            const now = audioCtx.currentTime;
 
-        // Image Input Handlers
+            // Warm low-pass filter for the iconic muffled Lo-Fi aesthetic
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(650, now);
+
+            // Subtle tape flutter LFO
+            const lfo = audioCtx.createOscillator();
+            const lfoGain = audioCtx.createGain();
+            lfo.frequency.setValueAtTime(0.5, now);
+            lfoGain.gain.setValueAtTime(3.5, now);
+            lfo.connect(lfoGain);
+
+            frequencies.forEach(freq => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'triangle'; // Smooth mellow vintage keyboard timbre
+                osc.frequency.setValueAtTime(freq, now);
+                lfoGain.connect(osc.detune);
+
+                // Gentle envelope (soft attack, slow decay)
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.exponentialRampToValueAtTime(0.12, now + 0.15);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+                osc.connect(gain);
+                gain.connect(filter);
+                osc.start(now);
+                osc.stop(now + duration);
+            });
+
+            filter.connect(masterGain);
+            lfo.start(now);
+            lfo.stop(now + duration);
+        }
+
+        // Lo-Fi Jazz Chord Progression (Dm9 -> G13 -> Cmaj9 -> Am9)
+        const jazzProgression = [
+            [293.66, 349.23, 440.00, 523.25, 659.25], // Dm9
+            [196.00, 293.66, 369.99, 440.00, 659.25], // G13
+            [261.63, 329.63, 392.00, 493.88, 587.33], // Cmaj9
+            [220.00, 261.63, 329.63, 392.00, 493.88]  // Am9
+        ];
+        let chordIndex = 0;
+
+        function toggleLofiAudio() {
+            initAudioContext();
+            isAudioPlaying = !isAudioPlaying;
+
+            const eq = document.getElementById('eqVisualizer');
+            const statusText = document.getElementById('lofiStatusText');
+            const btn = document.getElementById('lofiAudioBtn');
+
+            if (isAudioPlaying) {
+                eq.classList.remove('eq-paused');
+                statusText.innerText = "JAZZ ON";
+                btn.classList.add('border-purple-400');
+                showToast("🎵 ローファイ・ジャズBGMを開始しました");
+                playSfx('click');
+
+                // Start Chord Loop
+                playJazzChord(jazzProgression[chordIndex]);
+                lofiInterval = setInterval(() => {
+                    chordIndex = (chordIndex + 1) % jazzProgression.length;
+                    playJazzChord(jazzProgression[chordIndex]);
+                }, 3400);
+            } else {
+                eq.classList.add('eq-paused');
+                statusText.innerText = "JAZZ OFF";
+                btn.classList.remove('border-purple-400');
+                if (lofiInterval) clearInterval(lofiInterval);
+            }
+        }
+
+        // Retro Sound Effects (Synthesized Blips)
+        function playSfx(type) {
+            if (!sfxEnabled) return;
+            initAudioContext();
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            if (type === 'click') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            } else if (type === 'success') {
+                // Happy Level-up Arpeggio (C5 -> E5 -> G5 -> C6)
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.type = 'triangle';
+                    o.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    g.gain.setValueAtTime(0.1, now + idx * 0.08);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.15);
+                    o.connect(g);
+                    g.connect(masterGain);
+                    o.start(now + idx * 0.08);
+                    o.stop(now + idx * 0.08 + 0.15);
+                });
+                return;
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.linearRampToValueAtTime(110, now + 0.15);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                osc.start(now);
+                osc.stop(now + 0.15);
+            } else if (type === 'camera') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(900, now);
+                osc.frequency.exponentialRampToValueAtTime(450, now + 0.08);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            }
+
+            osc.connect(gain);
+            gain.connect(masterGain);
+        }
+
+        function toggleSfx() {
+            sfxEnabled = !sfxEnabled;
+            const icon = document.getElementById('sfxIcon');
+            if (sfxEnabled) {
+                icon.className = "w-4 h-4 text-pink-400";
+                showToast("🔊 効果音をONにしました");
+                playSfx('click');
+            } else {
+                icon.className = "w-4 h-4 text-gray-500";
+                showToast("🔇 効果音をミュートにしました");
+            }
+            lucide.createIcons();
+        }
+
+        // --- 3. Image Capture & Preview Management ---
+        function triggerCameraCapture() {
+            playSfx('camera');
+            document.getElementById('cameraInput').click();
+        }
+
+        function triggerGalleryUpload() {
+            playSfx('click');
+            document.getElementById('fileInput').click();
+        }
+
         function handleFile(file) {
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function (e) {
                 base64Image = e.target.result.split(',')[1];
-                document.getElementById('imagePreview').src = e.target.result;
-                document.getElementById('imagePreview').classList.remove('hidden');
+                const previewImg = document.getElementById('imagePreview');
+                previewImg.src = e.target.result;
+                previewImg.classList.remove('hidden');
                 document.getElementById('previewPlaceholder').classList.add('hidden');
+                document.getElementById('imageControlsOverlay').classList.remove('hidden');
+                playSfx('camera');
+                showToast("📸 問題の写真をセットしました！");
             };
             reader.readAsDataURL(file);
         }
@@ -250,91 +858,674 @@
         document.getElementById('cameraInput').addEventListener('change', (e) => handleFile(e.target.files[0]));
         document.getElementById('fileInput').addEventListener('change', (e) => handleFile(e.target.files[0]));
 
-        // Mode Selector
+        function clearImage() {
+            base64Image = null;
+            document.getElementById('imagePreview').src = '';
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('previewPlaceholder').classList.remove('hidden');
+            document.getElementById('imageControlsOverlay').classList.add('hidden');
+            document.getElementById('cameraInput').value = '';
+            document.getElementById('fileInput').value = '';
+            playSfx('click');
+        }
+
+        // Drag & Drop Support for desktop/tablet
+        const dropZone = document.getElementById('imagePreviewContainer');
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-yellow-400', 'bg-purple-950/40');
+            }, false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-yellow-400', 'bg-purple-950/40');
+            }, false);
+        });
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length) handleFile(files[0]);
+        });
+
+        // --- 4. Middle School 1st Year (中1) Sample Question Generator ---
+        // Generates an authentic canvas-based sample problem for instant testing
+        function loadSampleQuestion() {
+            playSfx('click');
+            const canvas = document.createElement('canvas');
+            canvas.width = 640;
+            canvas.height = 360;
+            const ctx = canvas.getContext('2d');
+
+            // Dark anime-style worksheet background
+            ctx.fillStyle = "#1e1b2e";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Grid lines
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.15)";
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 30) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 30) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            // Outer border
+            ctx.strokeStyle = "#c084fc";
+            ctx.lineWidth = 4;
+            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+            // Header text
+            ctx.fillStyle = "#fde047";
+            ctx.font = "bold 20px 'Noto Sans JP', sans-serif";
+            ctx.fillText("【中学校第1学年 数学ワーク • 1次方程式】", 30, 50);
+
+            // Question prompt
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "18px 'Noto Sans JP', sans-serif";
+            ctx.fillText("問 1. 次の方程式を解きなさい。", 40, 100);
+
+            // Equation Box
+            ctx.fillStyle = "#251f33";
+            ctx.fillRect(60, 130, 520, 90);
+            ctx.strokeStyle = "#f472b6";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(60, 130, 520, 90);
+
+            ctx.fillStyle = "#fde047";
+            ctx.font = "bold 32px monospace";
+            ctx.fillText("3x - 5 = x + 7", 200, 185);
+
+            // Study tip note
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "15px 'Noto Sans JP', sans-serif";
+            ctx.fillText("※ 移項(いこう)を使って x を左辺に、数字を右辺に集めよう！", 40, 280);
+            ctx.fillText("サラの学習ノート • 数学ステップアップ課題", 40, 320);
+
+            const dataUrl = canvas.toDataURL('image/jpeg');
+            base64Image = dataUrl.split(',')[1];
+            document.getElementById('imagePreview').src = dataUrl;
+            document.getElementById('imagePreview').classList.remove('hidden');
+            document.getElementById('previewPlaceholder').classList.add('hidden');
+            document.getElementById('imageControlsOverlay').classList.remove('hidden');
+            setSubject('math');
+            showToast("✨ お試し問題（中1 数学: 一次方程式）をセット！");
+        }
+
+        // --- 5. Mode & Subject Toggles ---
         function setMode(mode) {
+            playSfx('click');
             selectedMode = mode;
             const btnStd = document.getElementById('modeStandard');
             const btnDet = document.getElementById('modeDetailed');
+            const badgeStd = document.getElementById('badgeStd');
+            const badgeDet = document.getElementById('badgeDet');
+            const descTag = document.getElementById('modeDescriptionTag');
 
             if (mode === 'standard') {
-                btnStd.className = "pixel-btn bg-purple-900 border-purple-400 text-white p-2 rounded text-xs text-left flex flex-col gap-1";
-                btnDet.className = "pixel-btn bg-slate-800 border-gray-600 text-gray-300 p-2 rounded text-xs text-left flex flex-col gap-1";
+                btnStd.className = "pixel-btn bg-purple-900/90 border-2 border-purple-400 text-white p-2.5 rounded-md text-left flex flex-col gap-1 transition-all";
+                btnDet.className = "pixel-btn bg-[#1e1b2e] border-2 border-gray-700 text-gray-400 p-2.5 rounded-md text-left flex flex-col gap-1 transition-all opacity-80 hover:opacity-100";
+                badgeStd.classList.remove('hidden');
+                badgeDet.classList.add('hidden');
+                descTag.innerText = "スピード解答（要点）";
             } else {
-                btnStd.className = "pixel-btn bg-slate-800 border-gray-600 text-gray-300 p-2 rounded text-xs text-left flex flex-col gap-1";
-                btnDet.className = "pixel-btn bg-purple-900 border-purple-400 text-white p-2 rounded text-xs text-left flex flex-col gap-1";
+                btnStd.className = "pixel-btn bg-[#1e1b2e] border-2 border-gray-700 text-gray-400 p-2.5 rounded-md text-left flex flex-col gap-1 transition-all opacity-80 hover:opacity-100";
+                btnDet.className = "pixel-btn bg-purple-900/90 border-2 border-pink-400 text-white p-2.5 rounded-md text-left flex flex-col gap-1 transition-all";
+                badgeStd.classList.add('hidden');
+                badgeDet.classList.remove('hidden');
+                descTag.innerText = "でんせつ解説（じっくり）";
             }
         }
 
-        // Call Gemini API directly from Frontend
-        async function analyzeImage() {
-            const apiKey = document.getElementById('apiKeyInput').value.trim() || localStorage.getItem('gemini_key');
+        function setSubject(subject) {
+            playSfx('click');
+            selectedSubject = subject;
+            document.querySelectorAll('.subject-tag').forEach(tag => {
+                if (tag.dataset.subject === subject) {
+                    tag.className = "subject-tag px-2 py-0.5 rounded border border-purple-500/60 bg-purple-900/60 text-yellow-300 font-jp text-[11px]";
+                } else {
+                    tag.className = "subject-tag px-2 py-0.5 rounded border border-slate-700 bg-slate-800/80 text-gray-300 hover:text-white font-jp text-[11px]";
+                }
+            });
+        }
 
-            if (!apiKey) {
-                alert("Por favor, insira sua Gemini API Key na seção de configuração.");
+        // --- 6. Gemini Multimodal Analysis for 中1 Student in Japanese ---
+        async function analyzeImage() {
+            const apiKey = getSavedApiKey();
+
+            if (!base64Image) {
+                playSfx('error');
+                showToast("📸 まずはカメラで撮影するか、画像を選んでね！");
                 return;
             }
 
-            if (!base64Image) {
-                alert("Por favor, tire uma foto ou selecione uma imagem da questão.");
+            if (!apiKey && !isDemoMode) {
+                openApiKeyModal();
+                showToast("🔑 Gemini APIキーを設定するか、「お試しモード」にしてね！");
                 return;
             }
 
             const btnAnalyze = document.getElementById('btnAnalyze');
+            const btnAnalyzeText = document.getElementById('btnAnalyzeText');
+            const loadingSection = document.getElementById('loadingSection');
             const resultSection = document.getElementById('resultSection');
             const resultContent = document.getElementById('resultContent');
 
             btnAnalyze.disabled = true;
-            btnAnalyze.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> ANALISANDO...`;
-            lucide.createIcons();
+            btnAnalyzeText.innerText = "かいせき中...";
+            loadingSection.classList.remove('hidden');
+            resultSection.classList.add('hidden');
+            loadingSection.scrollIntoView({ behavior: 'smooth' });
+            playSfx('click');
 
-            const detailPrompt = selectedMode === 'detailed'
-                ? "Forneça uma explicação detalhada passo a passo (modo Densetsu), dividindo em lógica, aplicação e dica de estudo."
-                : "Forneça uma resposta direta e objetiva em no máximo 3 pontos.";
+            // Specialized System Prompt for Sarah (14 years old, 中学校1年生) IN JAPANESE ONLY
+            const detailInstruction = selectedMode === 'detailed'
+                ? `【でんせつ解説モード（丁寧なステップ解説）】
+以下の5つの項目に整理して分かりやすく解説してください：
+1. 🎯 **問題の整理とポイント**: 問題文が何を求めているのかを優しく整理する。
+2. 💡 **解き方のステップと論理**: 途中式や思考の道筋を1行ずつ丁寧に解説（なぜその計算をするのか、なぜその符号になるのか）。
+3. 🏆 **最終的な答え**: 枠や太字で一目でわかるように強調。
+4. 🌸 **定期テスト対策！重要キーワード**: 今回の問題に出てきた重要語句や公式（例: 移項、1次方程式、光合成など）の要点。
+5. 🎨 **サラのためのアートメモ**: マイクラやイラストなどのビジュアル感覚で直感的に覚えられるワンポイントのコツや暗記の裏ワザ。`
+                : `【スピード解答モード（要点チェック）】
+以下の4項目で素早く要点をまとめてください：
+1. 🎯 **何をする問題か**: 1行でズバリ整理。
+2. 💡 **3ステップ解説**: 最短の途中式と要点。
+3. 🏆 **答え**: 明確に提示。
+4. 🌸 **覚えるルール**: この問題の必須公式・ルール。`;
 
-            const systemPrompt = `Você é o tutor da aplicação Study Camera para Sarah, uma estudante japonesa de 14 anos do 1º ano do Ensino Fundamental II (中学校1年生).
-Ajuste a linguagem para ser clara, visual e didática para uma estudante de 14 anos.
-${detailPrompt}
-Responda em português simples com termos relevantes em japonês quando for útil.`;
+            const systemPrompt = `あなたは、日本の14歳（中学校1年生）の女子生徒「サラさん」専用のAI学習サポーターです。
+サラさんはクリエイティブで絵を描くのが大好きな中1生です。彼女が勉強で困ったときに、自信を持って楽しく理解できるように優しく解説してください。
+
+【重要な指示】
+- **すべて自然な日本語**で答えてください。外国語（英語やポルトガル語など）は一切含めないでください。
+- 中学1年生が学校で習う言葉遣い・記号・公式（です・ます調）を使ってください。高校生レベルの難解な専門用語は避け、中1の視点に合わせてかみ砕いてください。
+- 画像に写っている教科書・問題集・学校のプリント・定期テストの日本語テキストや数式、図を正確に読み取ってください。
+- 見やすいMarkdown形式（## 見出し、- 箇条書き、**太字**での強調）で整理してください。
+
+${detailInstruction}`;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [
-                                { text: systemPrompt },
-                                { inline_data: { mime_type: "image/jpeg", data: base64Image } }
-                            ]
-                        }]
-                    })
-                });
+                let markdownResponse = "";
 
-                const data = await response.json();
-                const text = data.candidates[0].content.parts[0].text;
+                if (isDemoMode || !apiKey) {
+                    // Simulated authentic response in Japanese for demo/test mode
+                    await new Promise(r => setTimeout(r, 1400));
+                    markdownResponse = getSimulatedResponse(selectedMode);
+                } else {
+                    // Call Google Gemini API (gemini-2.5-flash with fallback)
+                    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+                    
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [
+                                    { text: systemPrompt },
+                                    { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+                                ]
+                            }]
+                        })
+                    });
 
-                resultContent.innerHTML = text.replace(/\n/g, '<br>');
+                    if (!response.ok) {
+                        const errData = await response.json();
+                        throw new Error(errData.error?.message || `HTTPエラー ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    markdownResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!markdownResponse) throw new Error("画像から文字や問題を読み取れませんでした。もう一度ピントを合わせて撮影してみてね。");
+                }
+
+                // Render Markdown via marked.js
+                resultContent.innerHTML = marked.parse(markdownResponse);
+
+                // Update Badges in Japanese
+                const subjectNames = {
+                    auto: '自動判定',
+                    math: '数学',
+                    science: '理科',
+                    japanese: '国語',
+                    english: '英語',
+                    social: '社会'
+                };
+                document.getElementById('resultSubjectBadge').innerText = `科目: ${subjectNames[selectedSubject] || '一般'}`;
+                document.getElementById('resultModeBadge').innerText = `モード: ${selectedMode === 'detailed' ? 'でんせつ解説' : 'スピード解答'}`;
+
+                // Display Section
+                loadingSection.classList.add('hidden');
                 resultSection.classList.remove('hidden');
                 resultSection.scrollIntoView({ behavior: 'smooth' });
 
+                // Add to Sarah's Caderno de Estudos (History)
+                addToHistory(markdownResponse);
+
+                // Reward XP
+                awardXp(50);
+                playSfx('success');
+                showToast("✨ わかりやすい解説が完成したよ！ (+50 EXP)");
+
             } catch (error) {
-                alert("Erro ao processar imagem: " + error.message);
+                console.error("Gemini Error:", error);
+                loadingSection.classList.add('hidden');
+                playSfx('error');
+                showToast("⚠️ 解答の作成に失敗しました: " + error.message);
+                alert("エラーが発生しました: " + error.message + "\n\n💡 APIキーが未設定の場合は、キー設定画面から「お試しモード」を選択するとすぐに体験できます！");
             } finally {
                 btnAnalyze.disabled = false;
-                btnAnalyze.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4"></i> RESOLVER QUESTÃO`;
+                btnAnalyzeText.innerText = "かいけつ！";
                 lucide.createIcons();
             }
         }
 
-        function generateQuest() {
-            alert("Quest de Fixação: Recurso ativado! Conectando ao histórico de fotos gravadas no navegador.");
+        // Fallback simulated response in Japanese for instant testing & demo
+        function getSimulatedResponse(mode) {
+            if (mode === 'detailed') {
+                return `## 🎯 問題の整理とポイント（1次方程式）
+解く方程式：**\`3x - 5 = x + 7\`**  
+この問題は、中1の数学で一番大切な**「1次方程式」**の基本問題です。  
+目標は、天びんの左右をつり合わせながら、最後に **\`x = (数字)\`** の形にすることだよ！
+
+---
+
+## 💡 解き方のステップと論理（途中式）
+
+### 【ステップ 1】文字と数字を分ける（移項 - いこう）
+等号（\`=\`）をまたいで反対側に引っ越しさせることを**移項**といいます。  
+引っ越しのルールはたった1つ：**「符号を逆にする（+ は - に、- は + に！）」**
+
+- 左辺（左側）に **\`x\`** のついた項を集める：右側の \`+x\` を左へ移項して \`-x\` に！
+- 右辺（右側）に**数字だけ**の項を集める：左側の \`-5\` を右へ移項して \`+5\` に！
+
+\`\`\`
+3x - x = 7 + 5
+\`\`\`
+
+### 【ステップ 2】それぞれの側を計算してまとめる
+- 左辺：\`3x - 1x = 2x\`
+- 右辺：\`7 + 5 = 12\`
+
+\`\`\`
+2x = 12
+\`\`\`
+
+### 【ステップ 3】x の係数（前の数字）で両辺を割る
+\`x\` にくっついている数字「\`2\`」で両側を割って、\`x\` をひとりぼっち（1x）にします。
+\`\`\`
+x = 12 ÷ 2
+x = 6
+\`\`\`
+
+---
+
+## 🏆 最終的な答え
+> **\`x = 6\`**  
+> *(たしかめ算: 左辺 3×6 - 5 = 13、右辺 6 + 7 = 13。両方とも13になってバッチリつり合っています！)*
+
+---
+
+## 🌸 定期テスト対策！重要キーワード
+- **移項（いこう）**: 等号（\`=\`）の反対側に項を動かすこと。**必ず符号が逆**になる！
+- **左辺・右辺・両辺（さへん・うへん・りょうへん）**: イコールの左側が左辺、右側が右辺、合わせて両辺。
+- **方程式の解（かい）**: 方程式を成り立たせる文字の値のこと。
+
+---
+
+## 🎨 サラのためのアートメモ
+*「イコール（\`=\`）は、マイクラのポータル（ゲート）のようなもの」とイメージしてみてね！  
+ゲートをくぐって反対の世界に行くと、ブロックの属性が反転します（プラスがマイナスへ、マイナスがプラスへ）。  
+同じ種類のブロック同士をきれいに仕分けてからまとめると、計算ミスがゼロになるよ！*`;
+            } else {
+                return `## 🎯 問題の要点
+方程式 **\`3x - 5 = x + 7\`** を解く問題。
+
+## 💡 3ステップ要点解説
+1. **移項（いこう）する**: 文字を左へ、数字を右へ（符号を反転！）  
+   \`3x - x = 7 + 5\`
+2. **両辺をまとめる**:  
+   \`2x = 12\`
+3. **x の係数「2」で割る**:  
+   \`x = 6\`
+
+## 🏆 答え
+> **\`x = 6\`**
+
+## 🌸 覚えるルール
+- **移項の法則**: イコールをまたぐと符号がひっくり返る！（+ は -、- は +）`;
+            }
         }
 
+        // --- 7. Interactive Quest / Quiz Engine in Japanese ---
+        const sampleQuests = [
+            {
+                subject: "中1 数学（1次方程式）",
+                question: "方程式 `2x + 6 = 14` を解いたときの x の値として正しいものはどれ？",
+                options: [
+                    "A) x = 3",
+                    "B) x = 4",
+                    "C) x = 5",
+                    "D) x = 10"
+                ],
+                answer: 1, // index 1: x = 4
+                explanation: "【解説】+6 を右辺に移項すると 2x = 14 - 6 → 2x = 8。両辺を 2 で割ると x = 4 になります！"
+            },
+            {
+                subject: "中1 理科（植物のなかま）",
+                question: "植物が日光のエネルギーを使って、水と二酸化炭素からデンプンと酸素を作るはたらきを何という？",
+                options: [
+                    "A) 呼吸（こきゅう）",
+                    "B) 蒸散（じょうさん）",
+                    "C) 光合成（こうごうせい）",
+                    "D) 受粉（じゅふん）"
+                ],
+                answer: 2, // 光合成
+                explanation: "【解説】葉緑体で光を受けてデンプンなどの栄養分を作り、酸素を出す働きは「光合成（こうごうせい）」です！"
+            },
+            {
+                subject: "中1 英語（be動詞）",
+                question: "次の空らんに当てはまる正しい単語を選ぼう：\n「Sarah and I ( 　 ) good friends.」",
+                options: [
+                    "A) am",
+                    "B) is",
+                    "C) are",
+                    "D) be"
+                ],
+                answer: 2, // are
+                explanation: "【解説】主語が「Sarah and I」（サラと私＝私たち we）と複数なので、be動詞は「are」を使います！"
+            }
+        ];
+
+        let currentQuestIndex = 0;
+        let currentQuestScore = 0;
+        let activeQuestList = [...sampleQuests];
+
+        function startInteractiveQuest() {
+            playSfx('click');
+            currentQuestIndex = 0;
+            currentQuestScore = 0;
+            document.getElementById('questIdleView').classList.add('hidden');
+            document.getElementById('questCompleteView').classList.add('hidden');
+            document.getElementById('questActiveView').classList.remove('hidden');
+            renderQuestQuestion();
+        }
+
+        function renderQuestQuestion() {
+            const q = activeQuestList[currentQuestIndex];
+            document.getElementById('questQuestionNumber').innerText = `第 ${currentQuestIndex + 1} 問 / 全 ${activeQuestList.length} 問`;
+            document.getElementById('questScoreTracker').innerText = `正解数: ${currentQuestScore} / ${activeQuestList.length}`;
+            document.getElementById('questSubjectBadge').innerText = q.subject;
+            document.getElementById('questQuestionText').innerText = q.question;
+
+            const container = document.getElementById('questOptionsContainer');
+            container.innerHTML = '';
+            document.getElementById('questFeedbackCard').classList.add('hidden');
+
+            q.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = "pixel-btn bg-[#251f33] hover:bg-[#342b47] text-white p-2.5 rounded text-xs text-left font-jp flex items-center justify-between transition-all";
+                btn.innerHTML = `<span>${optText}</span><i data-lucide="circle" class="w-3.5 h-3.5 text-gray-500"></i>`;
+                btn.onclick = () => selectQuestOption(index);
+                container.appendChild(btn);
+            });
+            lucide.createIcons();
+        }
+
+        function selectQuestOption(selectedIndex) {
+            const q = activeQuestList[currentQuestIndex];
+            const buttons = document.getElementById('questOptionsContainer').querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            const feedbackCard = document.getElementById('questFeedbackCard');
+            const feedbackTitle = document.getElementById('questFeedbackTitle');
+            const feedbackText = document.getElementById('questFeedbackText');
+
+            if (selectedIndex === q.answer) {
+                // Correct
+                currentQuestScore++;
+                playSfx('success');
+                buttons[selectedIndex].className = "pixel-btn bg-emerald-700 border-emerald-400 text-white p-2.5 rounded text-xs text-left font-jp flex items-center justify-between";
+                buttons[selectedIndex].innerHTML = `<span>${q.options[selectedIndex]}</span><i data-lucide="check-circle" class="w-4 h-4 text-yellow-300"></i>`;
+                
+                feedbackCard.className = "p-3 rounded border border-emerald-500/60 bg-emerald-950/40 text-xs font-jp flex flex-col gap-2";
+                feedbackTitle.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> <span class="text-emerald-300 font-jp font-bold text-xs">大正解！ (+50 EXP)</span>`;
+                awardXp(50);
+            } else {
+                // Incorrect
+                playSfx('error');
+                buttons[selectedIndex].className = "pixel-btn bg-red-900 border-red-500 text-white p-2.5 rounded text-xs text-left font-jp flex items-center justify-between";
+                buttons[selectedIndex].innerHTML = `<span>${q.options[selectedIndex]}</span><i data-lucide="x-circle" class="w-4 h-4 text-pink-300"></i>`;
+                
+                // Highlight the correct one
+                buttons[q.answer].className = "pixel-btn bg-emerald-800/80 border-emerald-500 text-white p-2.5 rounded text-xs text-left font-jp flex items-center justify-between";
+
+                feedbackCard.className = "p-3 rounded border border-red-500/60 bg-red-950/40 text-xs font-jp flex flex-col gap-2";
+                feedbackTitle.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 text-pink-400"></i> <span class="text-pink-300 font-jp font-bold text-xs">おしい！正解はこれだよ</span>`;
+            }
+
+            feedbackText.innerText = q.explanation;
+            feedbackCard.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function nextQuestQuestion() {
+            playSfx('click');
+            currentQuestIndex++;
+            if (currentQuestIndex < activeQuestList.length) {
+                renderQuestQuestion();
+            } else {
+                // Finish Quiz
+                document.getElementById('questActiveView').classList.add('hidden');
+                document.getElementById('questCompleteView').classList.remove('hidden');
+                document.getElementById('questFinalScoreText').innerText = `3問中 ${currentQuestScore} 問 正解しました！`;
+                playSfx('success');
+            }
+        }
+
+        function resetQuestView() {
+            playSfx('click');
+            document.getElementById('questActiveView').classList.add('hidden');
+            document.getElementById('questCompleteView').classList.add('hidden');
+            document.getElementById('questIdleView').classList.remove('hidden');
+        }
+
+        function jumpToQuestMode() {
+            playSfx('click');
+            const questSection = document.getElementById('questSection');
+            questSection.scrollIntoView({ behavior: 'smooth' });
+            if (document.getElementById('questActiveView').classList.contains('hidden')) {
+                startInteractiveQuest();
+            }
+        }
+
+        function generateQuestFromCurrent() {
+            playSfx('click');
+            jumpToQuestMode();
+            showToast("⚔️ この単元の復習クエストをセットしました！");
+        }
+
+        // --- 8. Gamification & XP System ---
+        function awardXp(points) {
+            userStats.xp += points;
+            if (userStats.xp >= userStats.maxXp) {
+                userStats.level += 1;
+                userStats.xp = userStats.xp - userStats.maxXp;
+                showToast(`🌟 レベルアップ！ サラは Lv.${userStats.level} に上がったよ！`);
+                playSfx('success');
+            }
+            const percentage = Math.min(100, Math.round((userStats.xp / userStats.maxXp) * 100));
+            document.getElementById('xpProgressBar').style.width = `${percentage}%`;
+            document.getElementById('xpLabel').innerText = `EXP: ${userStats.xp}/${userStats.maxXp}`;
+        }
+
+        // --- 9. Speech & Copy Utilities in Japanese ---
         function copyResult() {
+            playSfx('click');
             const text = document.getElementById('resultContent').innerText;
             navigator.clipboard.writeText(text);
-            alert("Resolução copiada com sucesso!");
+            showToast("📋 解説テキストをコピーしました！");
         }
+
+        function speakResult() {
+            playSfx('click');
+            if (!('speechSynthesis' in window)) {
+                showToast("⚠️ お使いの端末は音声読み上げに対応していません");
+                return;
+            }
+
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                showToast("🔇 読み上げを一時停止しました");
+                return;
+            }
+
+            const text = document.getElementById('resultContent').innerText;
+            const cleanText = text.replace(/[#*`_>]/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText.slice(0, 500));
+            utterance.rate = 1.0;
+            utterance.pitch = 1.05; // Friendly tone for tutoring Sarah in Japanese
+            utterance.lang = 'ja-JP';
+
+            utterance.onstart = () => showToast("🔊 日本語で読み上げを開始します...");
+            utterance.onend = () => showToast("✅ 読み上げが完了しました！");
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- 10. History / 学習ノート ---
+        function addToHistory(contentSnippet) {
+            const preview = contentSnippet.slice(0, 90).replace(/[#*`_]/g, '') + "...";
+            const dateStr = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+            studyHistory.unshift({ date: dateStr, preview, subject: selectedSubject });
+            if (studyHistory.length > 5) studyHistory.pop();
+
+            document.getElementById('historyCountBadge').innerText = `${studyHistory.length} 件保存`;
+            renderHistoryList();
+        }
+
+        function renderHistoryList() {
+            const list = document.getElementById('historyList');
+            if (studyHistory.length === 0) {
+                document.getElementById('historyEmptyMsg').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('historyEmptyMsg').classList.add('hidden');
+            list.innerHTML = '';
+            studyHistory.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "bg-black/30 p-2 rounded border border-purple-900/40 flex justify-between items-center text-[11px] font-jp";
+                div.innerHTML = `
+                    <div class="truncate max-w-[280px]">
+                        <span class="text-yellow-300 font-retro mr-1">[${item.date}]</span>
+                        <span class="text-gray-200">${item.preview}</span>
+                    </div>
+                    <span class="text-[9px] font-pixel text-purple-300 uppercase">${item.subject}</span>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function toggleHistoryDrawer() {
+            playSfx('click');
+            const list = document.getElementById('historyList');
+            list.classList.toggle('hidden');
+        }
+
+        // --- 11. API Key & Demo Mode Management ---
+        function getSavedApiKey() {
+            return localStorage.getItem('gemini_key') || document.getElementById('apiKeyInput').value.trim();
+        }
+
+        function openApiKeyModal() {
+            playSfx('click');
+            const modal = document.getElementById('apiKeyModal');
+            modal.classList.remove('hidden');
+            const savedKey = localStorage.getItem('gemini_key');
+            if (savedKey) document.getElementById('apiKeyInput').value = savedKey;
+        }
+
+        function closeApiKeyModal() {
+            playSfx('click');
+            document.getElementById('apiKeyModal').classList.add('hidden');
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if (key) {
+                localStorage.setItem('gemini_key', key);
+                isDemoMode = false;
+                updateKeyStatusUI(true);
+                showToast("🟢 Gemini APIキーを保存しました！");
+            } else {
+                localStorage.removeItem('gemini_key');
+                updateKeyStatusUI(false);
+                showToast("🟡 APIキーを解除しました");
+            }
+            playSfx('success');
+            closeApiKeyModal();
+        }
+
+        function enableDemoMode() {
+            isDemoMode = true;
+            updateKeyStatusUI(true);
+            showToast("🎮 お試しモードを有効化しました！");
+            playSfx('success');
+            closeApiKeyModal();
+        }
+
+        function updateKeyStatusUI(hasKey) {
+            const badge = document.getElementById('keyStatusBadge');
+            if (hasKey || isDemoMode) {
+                badge.className = "absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-black";
+            } else {
+                badge.className = "absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-yellow-400 border border-black";
+            }
+        }
+
+        function togglePasswordVisibility() {
+            const input = document.getElementById('apiKeyInput');
+            const icon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                input.type = 'password';
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
+        // --- 12. Retro Toast Notification Helper ---
+        let toastTimeout = null;
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const toastMsg = document.getElementById('toastMessage');
+            toastMsg.innerText = message;
+            toast.classList.remove('hidden');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // --- 13. Initialization on Page Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            const savedKey = localStorage.getItem('gemini_key');
+            if (savedKey) {
+                document.getElementById('apiKeyInput').value = savedKey;
+                updateKeyStatusUI(true);
+            } else {
+                updateKeyStatusUI(false);
+            }
+        });
     </script>
 </body>
 
