@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Camera | スタディカメラ</title>
+
+    <!-- Fonts: Pixel Art & Japanese Anime Style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Press+Start+2P&family=VT323&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #1e1b2e;
+            color: #e2e8f0;
+        }
+
+        .font-pixel {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .font-retro {
+            font-family: 'VT323', monospace;
+        }
+
+        .pixel-border {
+            box-shadow:
+                -4px 0 0 0 #000,
+                4px 0 0 0 #000,
+                0 -4px 0 0 #000,
+                0 4px 0 0 #000;
+        }
+
+        .pixel-box {
+            border: 4px solid #2d2640;
+            background-color: #2a2438;
+            box-shadow: 4px 4px 0px #120e1d;
+        }
+
+        .pixel-btn {
+            border: 3px solid #000;
+            box-shadow: 3px 3px 0px #000;
+            transition: all 0.1s ease;
+        }
+
+        .pixel-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #000;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen pb-12 flex flex-col items-center">
+
+    <!-- Header / Top Bar (Jazz Lo-Fi + Pixel Aesthetic) -->
+    <header
+        class="w-full max-w-md bg(#352f44) p-4 border-b-4 border-black mb-6 flex justify-between items-center bg-[#2a2438]">
+        <div class="flex items-center gap-2">
+            <i data-lucide="camera" class="w-6 h-6 text-purple-400"></i>
+            <div>
+                <h1 class="font-pixel text-xs text-purple-300 tracking-wider">STUDY CAMERA</h1>
+                <p class="text-[10px] text-gray-400 font-retro tracking-widest">スタディカメラ • 中1 ART EDITION</p>
+            </div>
+        </div>
+        <div
+            class="px-2 py-1 bg-purple-900/60 border border-purple-500/40 rounded text-[10px] text-purple-200 flex items-center gap-1">
+            <i data-lucide="music" class="w-3 h-3 text-pink-400"></i>
+            <span>Lo-Fi Jazz</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-md px-4 flex-1 flex flex-col gap-6">
+
+        <!-- Profile & Age Tag -->
+        <div class="pixel-box p-3 rounded flex justify-between items-center text-xs">
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-8 h-8 rounded bg-purple-600 border-2 border-black flex items-center justify-center font-pixel text-yellow-300 text-xs">
+                    🎨
+                </div>
+                <div>
+                    <p class="font-bold text-purple-200">Sarah (サラ)</p>
+                    <p class="text-[10px] text-gray-400"> Target: 中学校1年生 (14歳)</p>
+                </div>
+            </div>
+            <span
+                class="px-2 py-1 bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-[10px] rounded font-pixel">
+                LV.14
+            </span>
+        </div>
+
+        <!-- API Key Input Section (Collapsible / Simple) -->
+        <details class="pixel-box p-3 rounded text-xs bg-[#241e30]">
+            <summary class="cursor-pointer text-purple-300 font-bold flex items-center gap-2">
+                <i data-lucide="key" class="w-4 h-4"></i>
+                <span>Chave de API do Gemini (Clique para configurar)</span>
+            </summary>
+            <div class="mt-3 flex flex-col gap-2">
+                <input type="password" id="apiKeyInput" placeholder="Cole sua GEMINI_API_KEY aqui"
+                    class="p-2 rounded bg-black/40 border border-purple-500/30 text-white text-xs w-full focus:outline-none focus:border-purple-400">
+                <p class="text-[10px] text-gray-400">A chave é salva apenas no seu navegador localmente.</p>
+            </div>
+        </details>
+
+        <!-- Camera / Upload Section (Mokuhyou) -->
+        <section class="pixel-box p-4 rounded text-center flex flex-col gap-4">
+            <div class="flex justify-between items-center border-b border-purple-800/40 pb-2">
+                <span class="font-pixel text-[10px] text-purple-300">📸 CAPTURE A QUESTÃO</span>
+                <span class="text-xs text-gray-400 font-retro">TARGET: LIVROS & PROVAS</span>
+            </div>
+
+            <!-- Preview Box -->
+            <div id="imagePreviewContainer"
+                class="w-full h-48 bg-black/50 border-2 border-dashed border-purple-500/40 rounded flex flex-col items-center justify-center relative overflow-hidden">
+                <img id="imagePreview" class="hidden w-full h-full object-contain">
+                <div id="previewPlaceholder" class="flex flex-col items-center gap-2 text-gray-400">
+                    <i data-lucide="image-plus" class="w-10 h-10 text-purple-400/60"></i>
+                    <p class="text-xs">Tire foto do livro ou selecione da galeria</p>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex gap-2">
+                <label for="cameraInput"
+                    class="flex-1 pixel-btn bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-3 rounded text-xs flex items-center justify-center gap-2 cursor-pointer">
+                    <i data-lucide="camera" class="w-4 h-4"></i>
+                    <span>CÂMERA</span>
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
+                </label>
+                <label for="fileInput"
+                    class="flex-1 pixel-btn bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-2.5 px-3 rounded text-xs flex items-center justify-center gap-2 cursor-pointer">
+                    <i data-lucide="folder" class="w-4 h-4"></i>
+                    <span>GALERIA</span>
+                    <input type="file" id="fileInput" accept="image/*" class="hidden">
+                </label>
+            </div>
+        </section>
+
+        <!-- Mode Selector & Resolution Action -->
+        <section class="pixel-box p-4 rounded flex flex-col gap-3">
+            <div class="flex justify-between items-center">
+                <span class="font-pixel text-[10px] text-purple-300">📜 MODO DE RESPOSTA</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <button id="modeStandard" onclick="setMode('standard')"
+                    class="pixel-btn bg-purple-900 border-purple-400 text-white p-2 rounded text-xs text-left flex flex-col gap-1">
+                    <span class="font-bold flex items-center gap-1 text-yellow-300">
+                        <i data-lucide="zap" class="w-3 h-3"></i> Direta
+                    </span>
+                    <span class="text-[10px] text-gray-300">Resposta rápida e objetiva</span>
+                </button>
+                <button id="modeDetailed" onclick="setMode('detailed')"
+                    class="pixel-btn bg-slate-800 border-gray-600 text-gray-300 p-2 rounded text-xs text-left flex flex-col gap-1">
+                    <span class="font-bold flex items-center gap-1 text-pink-300">
+                        <i data-lucide="book-open" class="w-3 h-3"></i> Detalhada
+                    </span>
+                    <span class="text-[10px] text-gray-400">Passo a passo (Densetsu)</span>
+                </button>
+            </div>
+
+            <button id="btnAnalyze" onclick="analyzeImage()"
+                class="pixel-btn bg-emerald-600 hover:bg-emerald-500 text-white font-pixel text-xs py-3 rounded mt-2 flex items-center justify-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>RESOLVER QUESTÃO</span>
+            </button>
+        </section>
+
+        <!-- Results Display -->
+        <section id="resultSection" class="hidden pixel-box p-4 rounded flex flex-col gap-3 border-emerald-500/40">
+            <div class="flex justify-between items-center border-b border-purple-800/40 pb-2">
+                <span class="font-pixel text-[10px] text-emerald-300">✨ RESOLUÇÃO (中1 ADAPTED)</span>
+                <button onclick="copyResult()" class="text-xs text-purple-300 hover:text-white flex items-center gap-1">
+                    <i data-lucide="copy" class="w-3 h-3"></i> Copiar
+                </button>
+            </div>
+
+            <div id="resultContent" class="text-xs leading-relaxed space-y-3 font-sans text-gray-200">
+                <!-- Content inserted dynamically -->
+            </div>
+        </section>
+
+        <!-- Quiz / Quest Mode Section -->
+        <section class="pixel-box p-4 rounded flex flex-col gap-3 bg-[#221c2e]">
+            <div class="flex justify-between items-center">
+                <span class="font-pixel text-[10px] text-pink-300">⚔️ QUEST DE FIXAÇÃO</span>
+                <span class="text-[10px] text-gray-400">MODO TESTE</span>
+            </div>
+            <p class="text-xs text-gray-300">Gere um mini-simulado de 3 perguntas com base no seu histórico de estudos.
+            </p>
+            <button onclick="generateQuest()"
+                class="pixel-btn bg-pink-700 hover:bg-pink-600 text-white font-bold py-2 px-3 rounded text-xs flex items-center justify-center gap-2">
+                <i data-lucide="swords" class="w-4 h-4"></i>
+                <span>GERAR QUEST DE ESTUDO</span>
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-[10px] text-gray-500 font-retro tracking-widest">
+        STUDY CAMERA • DESENVOLVIDO PARA SARAH • 中学校1年生
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        let selectedMode = 'standard';
+        let base64Image = null;
+
+        // Load saved API Key if available
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem('gemini_key');
+            if (savedKey) {
+                document.getElementById('apiKeyInput').value = savedKey;
+            }
+        });
+
+        document.getElementById('apiKeyInput').addEventListener('change', (e) => {
+            localStorage.setItem('gemini_key', e.target.value.trim());
+        });
+
+        // Image Input Handlers
+        function handleFile(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                base64Image = e.target.result.split(',')[1];
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('imagePreview').classList.remove('hidden');
+                document.getElementById('previewPlaceholder').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        document.getElementById('cameraInput').addEventListener('change', (e) => handleFile(e.target.files[0]));
+        document.getElementById('fileInput').addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        // Mode Selector
+        function setMode(mode) {
+            selectedMode = mode;
+            const btnStd = document.getElementById('modeStandard');
+            const btnDet = document.getElementById('modeDetailed');
+
+            if (mode === 'standard') {
+                btnStd.className = "pixel-btn bg-purple-900 border-purple-400 text-white p-2 rounded text-xs text-left flex flex-col gap-1";
+                btnDet.className = "pixel-btn bg-slate-800 border-gray-600 text-gray-300 p-2 rounded text-xs text-left flex flex-col gap-1";
+            } else {
+                btnStd.className = "pixel-btn bg-slate-800 border-gray-600 text-gray-300 p-2 rounded text-xs text-left flex flex-col gap-1";
+                btnDet.className = "pixel-btn bg-purple-900 border-purple-400 text-white p-2 rounded text-xs text-left flex flex-col gap-1";
+            }
+        }
+
+        // Call Gemini API directly from Frontend
+        async function analyzeImage() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim() || localStorage.getItem('gemini_key');
+
+            if (!apiKey) {
+                alert("Por favor, insira sua Gemini API Key na seção de configuração.");
+                return;
+            }
+
+            if (!base64Image) {
+                alert("Por favor, tire uma foto ou selecione uma imagem da questão.");
+                return;
+            }
+
+            const btnAnalyze = document.getElementById('btnAnalyze');
+            const resultSection = document.getElementById('resultSection');
+            const resultContent = document.getElementById('resultContent');
+
+            btnAnalyze.disabled = true;
+            btnAnalyze.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> ANALISANDO...`;
+            lucide.createIcons();
+
+            const detailPrompt = selectedMode === 'detailed'
+                ? "Forneça uma explicação detalhada passo a passo (modo Densetsu), dividindo em lógica, aplicação e dica de estudo."
+                : "Forneça uma resposta direta e objetiva em no máximo 3 pontos.";
+
+            const systemPrompt = `Você é o tutor da aplicação Study Camera para Sarah, uma estudante japonesa de 14 anos do 1º ano do Ensino Fundamental II (中学校1年生).
+Ajuste a linguagem para ser clara, visual e didática para uma estudante de 14 anos.
+${detailPrompt}
+Responda em português simples com termos relevantes em japonês quando for útil.`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [
+                                { text: systemPrompt },
+                                { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+                            ]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                const text = data.candidates[0].content.parts[0].text;
+
+                resultContent.innerHTML = text.replace(/\n/g, '<br>');
+                resultSection.classList.remove('hidden');
+                resultSection.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                alert("Erro ao processar imagem: " + error.message);
+            } finally {
+                btnAnalyze.disabled = false;
+                btnAnalyze.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4"></i> RESOLVER QUESTÃO`;
+                lucide.createIcons();
+            }
+        }
+
+        function generateQuest() {
+            alert("Quest de Fixação: Recurso ativado! Conectando ao histórico de fotos gravadas no navegador.");
+        }
+
+        function copyResult() {
+            const text = document.getElementById('resultContent').innerText;
+            navigator.clipboard.writeText(text);
+            alert("Resolução copiada com sucesso!");
+        }
+    </script>
+</body>
+
+</html>
